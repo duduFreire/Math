@@ -1,0 +1,554 @@
+\documentclass[leqno]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage{yfonts}
+\usepackage{indentfirst}
+\usepackage[shortlabels]{enumitem}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\setlist{parsep=0pt,listparindent=\parindent}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{definition}{Definition}[section]
+
+\newcounter{lemmaCounter}
+\newcounter{theoremCounter}
+\newcounter{definitionCounter}
+
+\newenvironment{shortlemma}{\refstepcounter{lemmaCounter}
+\noindent\textbf{Lemma~\thelemmaCounter.}\em}
+
+\newenvironment{shorttheorem}{\refstepcounter{theoremCounter}
+\noindent\textbf{Theorem~\thetheoremCounter.}\em}
+
+\newenvironment{shortdefinition}{\refstepcounter{definitionCounter}
+\noindent\textbf{Definition~\thedefinitionCounter.}\em}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\makeatletter
+\let\oldabs\abs
+\let\oldceil\ceil 
+\let\oldfloor\floor
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+\def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
+\makeatother
+
+\AtBeginDocument{\providecommand*\colonequiv{\vcentcolon\mspace{-1.2mu}\equiv}}
+
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\I}{\mathbf{I}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\exc}[1]{\textbf{Exercise #1.}}
+\newcommand{\lep}[1][L]{#1et $\epsilon > 0$ be arbitrary}
+\newcommand{\seq}[1]{\left(#1\right)_{n=1}^\infty}
+\newcommand{\lang}{\mathcal{L}}
+\newcommand{\proves}{\vdash}
+\newcommand{\nproves}{\nvdash}
+\newcommand{\nmodels}{\nvDash}
+\newcommand{\is}{\colonequiv}
+\newcommand{\limplies}{\rightarrow}
+\newcommand{\liff}{\leftrightarrow}
+\newcommand{\struct}[1]{\mathfrak{#1}}
+\newcommand{\utilde}[1]{\underset{\sim}{#1}}
+\newcommand{\prt}[1]{\mathcal{#1}}
+\newcommand{\step}[1]{\sigma_{\mathrm{#1}}}
+
+\let\oldlog\log
+\let\oldmax\max
+\let\oldmin\min
+\let\oldsin\sin
+\let\oldcos\cos
+\renewcommand{\log}[1]{\oldlog \left( #1 \right)}
+\renewcommand{\max}[1]{\oldmax \left( #1 \right)}
+\renewcommand{\min}[1]{\oldmin \left( #1 \right)}
+\renewcommand{\sin}[1]{\oldsin \left( #1 \right)}
+\renewcommand{\cos}[1]{\oldcos \left( #1 \right)}
+
+\newcommand{\restr}[2]{\struct{#1}{{\upharpoonright}}_{\mathcal{#2}}}
+
+\newcounter{proofCounter}
+\newcommand*{\NewRow}{\stepcounter{proofCounter}\arabic{proofCounter}}%
+
+
+\title{Mathematical Logic}
+\author{Eduardo Freire}
+\date{May 2021}
+
+\begin{document}
+
+\maketitle
+\section{Propositional Logic}
+\begin{definition}
+    Let $Vars_P := \set{P_n: n \in \N}$  be the set of the symbols $P_1, P_2, \dots $, each called a propositional variable. We define the \textbf{language of propositional logic} as $\lang_P := Vars_P \cup \set{\limplies, \neg}$.
+\end{definition}
+
+\begin{definition}
+    Let $\phi$ be an $\lang_P$ string. We say that $\phi$ is a \textbf{propositional formula} (also called \textbf{p-formula}) if and only if
+    
+    \begin{enumerate}
+        \item $\phi$ is a propositional variable, or
+        \item $\phi \is (\alpha \limplies \beta)$ where $\alpha$ and $\beta$ are propositional formulas, or
+        \item $\phi \is (\neg \alpha)$ and $\alpha$ is a propositional formula.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    An \textbf{assignment function} is any function with domain $Vars_P$ and codomain $\set{T, F}$. Given an assignment function $s$, we define the function $\Bar{s}$ whose domain is the set of all p-formulas and codomain is $\set{T, F}$ as follows:
+    
+    \begin{equation*}
+        \Bar{s}(\phi) := 
+        \begin{cases}
+        s(\phi) & \phi \in Vars_P, \\
+        F & \phi \is (\neg \alpha) \text{ and } \Bar{s}(\alpha) = T,\\
+        F & \phi \is (\alpha \limplies \beta) \text{ and } \Bar{s}(\alpha) = T \text{ and } \Bar{s}(\beta) = F,\\
+        T & otherwise.
+        \end{cases}
+    \end{equation*} Also, if $\Sigma$ is a set of p-formulas, we say that \textbf{$s$ satisfies $\Sigma$} if and only if $\Bar{s}(\sigma) = T$ for every $\sigma \in \Sigma$. Otherwise, we say that \textbf{$s$ does not satisfy $\Sigma$}. If there is some assignment function $s'$ that satisfies $\Sigma$, we say that $\Sigma$ is \textbf{satisfiable}.
+\end{definition}
+
+\begin{definition}
+    Let $\phi$ be a p-formula. If $\Bar{s}(\phi) = T$ for every assignment function $s$, we say that $\phi$ is a \textbf{tautology}. On the other hand, if $\Bar{s}(\phi) = F$ for every assignment function $s$, we call $\phi$ a \textbf{contradiction}. In particular, we define $\top$ as the tautology $(P_1 \limplies (P_1 \limplies P_1))$ and $\bot$ as the contradiction $\neg \top$, i.e $\neg (P_1 \limplies (P_1 \limplies P_1))$.
+\end{definition}
+
+\begin{definition}
+    Let $\Lambda$ be a set of p-formulas such that for every p-formula $\phi$, $\phi \in \Lambda$ if and only if
+    
+    \begin{enumerate}
+        \item $\phi \is (A \limplies (B \limplies A))$, or
+        \item $\phi \is ((A \limplies (B \limplies C)) \limplies ((A \limplies B) \limplies (A \limplies C)))$, or
+        \item $\phi \is ((\neg B \limplies \neg A) \limplies (A \limplies B))$
+    \end{enumerate} where $A,B,C$ are p-formulas. We call $\Lambda$ the set of \textbf{logical axioms}.
+\end{definition}
+
+\begin{lemma} \label{lemma_propAxiomsAreTautologies}
+    Every $\lambda \in \Lambda$ is a tautology.
+\end{lemma}
+
+\begin{proof}
+     This is trivial to check case by case, using the definition of assignment functions for p-formulas.
+\end{proof}
+
+\begin{lemma} \label{lemma_modusPonens}
+    Let $\alpha$ and $\beta$ be p-formulas and $s$ be an assignment function such that $\Bar{s}(\alpha) = T$ and $\Bar{s}(\alpha \limplies \beta) = T$. Then $\Bar{s}(\beta) = T$.
+\end{lemma}
+
+\begin{proof}
+     Assume for contradiction that $\Bar{s}(\beta) = F$. Since $\Bar{s}(\alpha) = T$ by assumption, it follows from the definition of $\Bar{s}$ that $\Bar{s}(\alpha \limplies \beta) = F$, which contradicts our assumption that $\Bar{s}(\alpha \limplies \beta) = T$. Thus $\Bar{s}(\beta) = T$.
+\end{proof}
+
+\begin{definition}
+    Let $\Sigma$ be a set of p-formulas and $\phi$ be a p-formula. We say that $\Sigma \models \phi$ if and only if every assignment function that satisfies $\Sigma$ assigns $\phi$ to $T$.
+\end{definition}
+
+\begin{definition}
+    Let $\Sigma$ be a set of p-formulas and $\phi$ be a p-formula. We say that a finite sequence $D = (\phi_1, \phi_2, \dots, \phi_n)$ of p-formulas whose last entry is $\phi$ is a \textbf{deduction from $\Sigma$ of $\phi$} if and only if for each $1 \leq i \leq n$,
+    
+    \begin{enumerate}
+        \item $\phi_i \in \Lambda \cup \Sigma$, or
+        \item There exists $j,k < i$ such that $\phi_j \is (\phi_k \limplies \phi_i)$.
+    \end{enumerate} In this case, we write $\Sigma \proves \phi$, read as $\Sigma$ proves $\phi$. If $\Gamma$ is a set of p-formulas such that $\Sigma \proves \gamma$ for every $\gamma \in \Gamma$, we write $\Sigma \proves \Gamma$.
+\end{definition}
+
+The following lemma has an easy proof and will be used implicitly several times.
+\begin{lemma}
+    Let $\Sigma, \Gamma$ be sets of p-formulas and $\alpha, \beta, \phi$ be p-formulas. It follows that:
+    \begin{enumerate}
+        \item If $\Sigma \proves (\alpha \limplies \beta)$ and $\Sigma \proves \alpha$, then $\Sigma \proves \beta$,
+    
+        \item If $\Gamma \proves \phi$ and $\Gamma \subseteq \Sigma$, then $\Sigma \proves \phi$,
+        
+        \item If $\Gamma \proves \phi$ and $\Sigma \proves \Gamma$, then $\Sigma \proves \phi$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{theorem} [Soundness Theorem]
+    Let $\Sigma$ be a set of p-formulas, $\phi$ be a p-formula. Then $\Sigma \proves \phi$ implies $\Sigma \models \phi$.
+\end{theorem}
+
+\begin{proof}
+     Assume that $\Sigma \proves \phi$. We let $s$ be an arbitrary assignment function that satisfies $\Sigma$ and induct on the shortest length of deduction of $\phi$. If there is a deduction of $\phi$ with length $1$, then either $\phi \in \Lambda$ or $\phi \in \Sigma$. In the first case, $\phi$ is a tautology by Lemma \ref{lemma_propAxiomsAreTautologies}, so $\Bar{s}(\phi) = T$. The other case follows from our assumption that $s$ satisfies $\Sigma$. Now assume inductively that if $\psi$ is a p-formula provable from $\Sigma$ such that its shortest length of deduction is less than or equal to $n$ then $\Bar{s}(\psi) = T$.
+     
+     Assume that the shortest length of deduction of $\phi$ is $n+1$. $\phi \notin \Sigma$ and $\phi \notin \Lambda$, since its shortest length of deduction would be $1$ in that case. Thus, we have $\phi_j$ and $\phi_k$ in the deduction of $\phi$ such that $\phi_j \is \phi_k \limplies \phi$. By the inductive hypothesis, $\Bar{s}(\phi_j) = \Bar{s}(\phi_k) = T$, so it follows from Lemma \ref{lemma_modusPonens} that $\Bar{s}(\phi) = T$. 
+\end{proof}
+
+\begin{lemma} \label{lem_selfImplication}
+    For every p-formula $\phi$, $\proves (\phi \limplies \phi)$.
+\end{lemma}
+
+\begin{proof}
+    Let $\phi$ be a p-formula. The following is a deduction of $(\phi \limplies \phi)$ from $\set{}$.
+    \begin{flalign}
+        &(\phi \limplies ((P_1 \limplies \phi) \limplies \phi)) &&\text{ Ax 1} \\
+        &((\phi \limplies ((P_1 \limplies \phi) \limplies \phi)) \limplies ((\phi \limplies (P_1 \limplies \phi)) \limplies (\phi \limplies \phi))) &&\text{ Ax 2}\\
+        &((\phi \limplies (P_1 \limplies \phi)) \limplies (\phi \limplies \phi)) &&\text{ MP 1,2}\\
+        &(\phi \limplies (P_1 \limplies \phi)) &&\text{ Ax 1}\\
+        &(\phi \limplies \phi) &&\text{ MP 3,4}.
+    \end{flalign}
+
+\end{proof}
+
+\begin{theorem} [Deduction Theorem]
+    Let $\Sigma$ be a set of p-formulas and $\theta, \phi$ be p-formulas. Then, $\Sigma \proves (\theta \limplies \phi) \iff \Sigma \cup \set{\theta} \proves \phi$.
+\end{theorem}
+
+\begin{proof}
+     For the forward direction, assume that $\Sigma \proves (\theta \limplies \phi)$. We can use the same deduction from $\Sigma$ of $(\theta \limplies \phi)$ to see that $\Sigma \cup \set{\theta} \proves (\theta \limplies \phi)$. But clearly $\Sigma \cup \set{\theta} \proves \theta$, so $\Sigma \cup \set{\theta} \proves \phi$ by modus ponens.
+     
+     For the converse direction, we will assume that $\Sigma \cup \set{\theta} \proves \phi$ and induct on the shortest length of deduction of $\phi$. For the base case, assume first that $\phi \in \Lambda \cup \Sigma$. Then, $\Sigma \proves \phi$ and $\phi \limplies (\theta \limplies \phi)$ is a logical axiom so $\Sigma$ also proves it. By modus ponens, $\Sigma \proves (\theta \limplies \phi)$. The last subcase of the base case is $\phi \is \theta$, but we already know that $\Sigma \proves (\theta \limplies \theta)$, by Lemma \ref{lem_selfImplication}.
+     
+     Next, assume the inductive hypothesis and let the shortest length of deduction of $\phi$ be $n+1$. Then, we must have $\psi$ and $(\psi \limplies \phi)$ in the deduction of $\phi$ from $\Sigma \cup \set{\theta}$. By the inductive hypothesis (IH), $\Sigma \proves (\theta \limplies (\psi \limplies \phi))$ an $\Sigma \proves (\theta \limplies \psi)$. Then,
+     
+    \setcounter{equation}{0}
+    \begin{flalign}
+    \Sigma \proves &((\theta \limplies (\psi \limplies \phi)) \limplies ((\theta \limplies \psi) \limplies (\theta \limplies \phi))) &&\text{ Ax 2}\\
+    \Sigma \proves & ((\theta \limplies \psi) \limplies (\theta \limplies \phi)) &&\text{ MP 1,IH} \\ 
+    \Sigma \proves &(\theta \limplies \phi) &&\text{ MP 2,IH}
+    \end{flalign}
+\end{proof}
+
+\begin{lemma} \label{lemma_explosion}
+    Let $\psi, \phi$ be p-formulas. Then $\psi, \neg \psi \proves \phi$.
+\end{lemma}
+
+\begin{proof}
+    \setcounter{equation}{0}
+     \begin{flalign}
+     & \neg \psi \limplies (\neg \phi \limplies \neg \psi) && \text{ Ax 1} \\
+     &\neg \psi \\ 
+     &(\neg \phi \limplies \neg \psi) &&\text{ MP 1,2} \\
+     &(\neg \phi \limplies \neg \psi) \limplies (\psi \limplies \phi) &&\text{ Ax 3} \\ 
+     &(\psi \limplies \phi) &&\text{ MP 3,4} \\
+     &\psi \\
+     &\phi &&\text{ MP 5,6}.
+     \end{flalign}
+\end{proof}
+
+\begin{definition}
+    A set of p-formulas $\Sigma$ is inconsistent if and only if there is a p-formula $\phi$ such that $\Sigma \proves \phi$ and $\Sigma \proves \neg \phi$. $\Sigma$ is consistent if and only if it is not inconsistent.
+\end{definition}
+
+\begin{lemma} \label{lem_consistencyEquiv}
+    Let $\Sigma$ be a set of p-formulas. The following statements are equivalent:
+    \begin{enumerate}
+        \item $\Sigma$ is consistent.
+        \item There is a p-formula $\psi$ such that $\Sigma \nproves \psi$.
+        \item There is no p-formula $\psi$ such that $\Sigma \proves \neg (\psi \limplies \psi)$.
+        \item $\Sigma \nproves \bot$.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+      For the equivalence between (1) and (2), we show instead that $\Sigma$ is inconsistent if and only if $\Sigma$ proves every p-formula. For the forward direction, assume that $\Sigma$ is inconsistent. Then there is some formula $\phi$ such that $\Sigma \proves \phi$ and $\Sigma \proves \neg \phi$. From the deductions of each of these, we can use Lemma \ref{lemma_explosion} to produce a deduction of any formula $\psi$.
+     
+     For the converse direction, assume that $\Sigma$ proves every p-formula. Then $\Sigma \proves P_1$ and $\Sigma \proves \neg P_1$, so it is inconsistent.
+     
+     For the equivalence between (2) and (3), assume first that there is a p-formula $\psi$ such that $\Sigma \proves \neg(\psi \limplies \psi)$. By Lemma \ref{lem_selfImplication}, $\Sigma \proves (\psi \limplies \psi)$. Thus, it follows from Lemma \ref{lemma_explosion} that $\Sigma$ proves every formula, thus showing that (2) is not the case. The other direction is trivial.
+     
+     (4) $\implies$ (2) is trivial, and (3) $\implies$ (4) also follows easily.
+ \end{proof}
+ 
+ \begin{lemma} \label{lem_addStaysConsistent}
+     Let $\Sigma$ be a set of p-formulas. If $\phi$ is a p-formula such that $\Sigma \nproves \phi$, then $\Sigma \cup \set{\neg \phi}$ is consistent.
+ \end{lemma}
+ 
+ \begin{proof}
+      We prove by contrapositive, so assume that $\Sigma \cup \neg \phi$ is inconsistent. By Lemma \ref{lem_consistencyEquiv}, $\Sigma \cup \neg \phi \proves \bot$, and the Deduction Theorem guarantees that $\Sigma \proves (\neg \phi \limplies \bot)$. Then,
+      
+      \setcounter{equation}{0}
+      \begin{flalign}
+      \Sigma &\proves (\neg \phi \limplies \bot) && \text{ Deduction Theorem}\\
+      \Sigma &\proves (\neg \phi \limplies \bot) \limplies (\top \limplies \phi) && \text{ Ax 3}\\ 
+      \Sigma &\proves \top \limplies \phi && \text{ MP 1,2}\\
+      \Sigma &\proves \top && \text{ Ax 1}\\
+      \Sigma &\proves \phi && \text{ MP 4,5}.
+      \end{flalign}
+ \end{proof}
+
+\begin{lemma} \label{lem_completenessEquiv}
+    The following statements are equivalent:
+    \begin{enumerate}
+        \item For every set of p-formulas $\Gamma$ and every p-formula $\phi$, if $\Gamma \models \phi$ then $\Gamma \proves \phi$.
+        
+        \item Every consistent set of p-formulas is satisfiable.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+     For the forward direction, assume the contrapositive of (1) and let $\Delta$ be a consistent set of p-formulas. By Lemma \ref{lem_consistencyEquiv}, $\Delta \nproves \bot$. By assumption, $\Delta \nmodels \bot$. If there was no assignment $s$ that satisfied $\Delta$, then $\Delta \models \bot$ would be vacuously true, so $\Delta$ must be satisfiable.
+     
+     For the converse direction, assume (2) and let $\Gamma$ and $\phi$ be such that $\Gamma \nproves \phi$. By Lemma \ref{lem_addStaysConsistent}, $\Gamma \cup \set{\neg \phi}$ is consistent, so it is satisfied by some assignment $s$. Thus, $s(\neg \phi) = T$, so $s(\phi) = F$. Since $s$ satisfies $\Gamma$ but $s(\phi) = F$, it follows that $\Gamma \nmodels \phi$, as wanted.
+\end{proof}
+
+\begin{definition} \label{def_propComplete}
+    Let $\Sigma$ be a set of p-formulas. We say that $\Sigma$ is complete if and only if $\Sigma$ is consistent and for every p-formula $\phi$, exactly one of $\phi, \neg \phi$ is in $\Sigma$.
+\end{definition}
+
+\begin{lemma} \label{lem_simpleComplete}
+    Let $\Sigma$ be a complete set of p-formulas. Then, $\Sigma \proves \phi \iff \phi \in \Sigma$ for all p-formulas $\phi$.
+\end{lemma}
+
+\begin{proof}
+    For the forward direction assume that $\Sigma \proves \phi$. If $\neg \phi \in \Sigma$ then clearly $\Sigma \proves \neg \phi$, so $\Sigma$ is inconsistent, contradicting the assumption that $\Sigma$ is complete. Thus $\neg \phi \notin \Sigma$, therefore $\phi \in \Sigma$.
+    The converse direction is trivial.
+\end{proof}
+
+\begin{definition} \label{def_propMaxConsistent}
+  Let $\Sigma$ be a set of p-formulas. We say that $\Sigma$ is maximally consistent if and only if
+  \begin{enumerate}
+      \item $\Sigma$ is consistent, and
+      \item For every consistent $\Sigma'$, if $\Sigma \subseteq \Sigma'$ then $\Sigma' = \Sigma$.
+  \end{enumerate}
+\end{definition}
+
+\begin{lemma} \label{lemma_defEquiv}
+    Definitions \ref{def_propComplete} and \ref{def_propMaxConsistent} are equivalent.
+\end{lemma}
+
+\begin{proof}
+     Let $\Sigma$ be a set of p-formulas. For the forward direction, assume that $\Sigma$ is complete and that $\Sigma'$ is consistent with $\Sigma \subseteq \Sigma'$. Assume for contradiction that there is some $\psi \in \Sigma'$ such that $\psi \notin \Sigma$. Since $\Sigma$ is complete we can apply Lemma \ref{lem_simpleComplete} to see that, $\neg \psi \in \Sigma$, so it follows by assumption that $\neg \psi \in \Sigma'$ thus $\Sigma'$ is inconsistent. This contradiction means that $\Sigma' \subseteq \Sigma$, so $\Sigma' = \Sigma$.
+     
+     For the converse direction, assume that $\Sigma$ is maximally consistent and let $\phi$ be a formula such that $\Sigma \nproves \phi$. By Lemma \ref{lem_addStaysConsistent}, $\Sigma \cup \set{\neg \phi}$ is consistent. Since $\Sigma \cup \set{\neg \phi} \subseteq \Sigma$, it follows that $\Sigma \cup \set{\neg \phi} = \Sigma$, so $\neg \phi \in \Sigma$, therefore $\Sigma \proves \neg \phi$, as wanted. Also, since $\Sigma$ is consistent, it can only prove at most one of $\phi$ and $\neg \phi$ for any given $\phi$.
+\end{proof}
+
+\begin{lemma} \label{lemma_uniqueAssignment}
+    Let $\Sigma$ be a complete set of p-formulas. If $s$ is an assignment function such that for every propositional variable $p$,
+    \begin{equation*}
+        s(p) := \begin{cases}
+        T & p \in \Sigma \\
+        F & \neg p \in \Sigma,
+        \end{cases}
+    \end{equation*} then $s$ is the unique assignment that satisfies $\Sigma$.
+\end{lemma}
+
+\begin{proof}
+     Let $s$ be as described in the Lemma. Notice that $s$ is well-defined, since Lemma \ref{lem_simpleComplete} guarantees that for every propositional variable $p$ either $p \in \Sigma$ or $\neg p \in \Sigma$, but not both. To see that $s$ satisfies $\Sigma$, we show that $s(\sigma) = T \iff \sigma \in \Sigma$ by induction on the complexity of $\sigma$.
+     
+     The base case is that $\sigma$ is a propositional variable, but then $s(\sigma) = T \iff \sigma \in \Sigma$ follows trivially. Assume the expected induction hypothesis. If $\sigma \is \neg \alpha$, then $s(\sigma) = T \iff s(\alpha) = F \iff \neg \alpha \in \Sigma \iff \sigma \in \Sigma$. The other case is $\sigma \is (\alpha \limplies \beta)$. For the forward direction, assume that $s(\alpha \limplies \beta) = T$, and notice that $s(\alpha \limplies \beta) = T \iff s(\alpha) = F$ or $s(\beta) = T$. If $s(\alpha) = F$, then $\neg \alpha \in \Sigma$, by the inductive hypothesis. By Lemma \ref{lemma_explosion}, $\Sigma, \alpha \proves \beta$, so the Deduction Theorem gives that $\Sigma \proves (\alpha \limplies \beta)$, thus $\sigma \in \Sigma$. Next, assume that $s(\beta) = T$. Then, $\Sigma \proves \beta$, so $\Sigma \proves (\beta \limplies (\alpha \limplies \beta))$, thus $\Sigma \proves (\alpha \limplies \beta)$.
+     
+     For the converse direction, assume that $(\alpha \limplies \beta \in \Sigma)$. If $\neg \alpha \in \Sigma$ then $s(\alpha) = F$, so $s(\alpha \limplies \beta) = T$. The last case is $\alpha \in \Sigma$. Applying modus ponens, $\Sigma \proves \beta$, so $\beta \in \Sigma$ and $s(\beta) = T$ by the inductive hypothesis, so $s(\alpha \limplies \beta) = T$. It follows by induction that $s$ satisfies $\Sigma$.
+     
+     Now assume that $s'$ is another assignment that satisfies $\Sigma$ and let $p$ be an arbitrary propositional variable. If $p \in \Sigma$ then $s'(p) = T$, but also $s(p) = T$. If $p \notin \Sigma$ then $\neg p \in \Sigma$ so $s'(\neg p) = T$ and $s'(p) = F$, and we also have $s(p) = F$. Since $s$ and $s'$ agree on every propositional variable, they must be the same function, so that $s$ is unique.
+\end{proof}
+
+
+\begin{theorem} [Completeness Theorem]
+    Let $\Sigma$ be a set of p-formulas and $\phi$ be a p-formula. Then, $\Sigma \models \phi \implies \Sigma \proves \phi$.
+\end{theorem}
+
+\begin{proof}
+   If we can show that any consistent set of p-formulas is satisfiable the result follows by Lemma \ref{lem_completenessEquiv}, so let $\Delta$ be one such set. Since $\lang_P$ only has countably many symbols and every $\lang_P$ string is finite, there are only countably many p-formulas. Thus, we can fix a list of the p-formulas as follows:
+   \begin{equation*}
+       \phi_0, \phi_1, \phi_2, \dots
+   \end{equation*}
+   This can be done so that every p-formula occurs in the list exactly once.
+   
+   Let $\Sigma_0 := \Delta$ and define $\Sigma_{n+1}$ recursively as
+   \begin{equation*}
+       \Sigma_{n+1} := \begin{cases}
+       \Sigma_n \cup \set{\phi_n} & \Sigma_n \proves \phi_n \\
+       \Sigma_n \cup \set{\neg \phi_n} & \Sigma_n \nproves \phi_n
+       \end{cases}
+   \end{equation*}
+    We argue by induction that each $\Sigma_n$ is consistent. The base case follows from the assumption that $\Delta$ is consistent, so assume that $\Sigma_n$ is consistent. If $\Sigma_n \nproves \phi_n$, $\Sigma_{n+1} = \Sigma_n \cup \set{\neg \phi_n}$ is consistent by Lemma \ref{lem_addStaysConsistent}. The other case is $\Sigma \proves \phi_n$, but then $\Sigma_{n+1} = \Sigma_n \cup \set{\phi_n}$ is clearly consistent.
+    
+    Define $\Sigma := \bigcup_{n \in \N} \Sigma_n$. Clearly $\Sigma_0 = \Delta \subseteq \Sigma$. Assume for contradiction that $\Sigma$ is inconsistent and fix some deduction $D$ of $\bot$ from $\Sigma$. Since $D$ is finite, there are only finitely many assumptions used (i.e elements of $\Sigma$) used in $D$, so that there is some $N \in \N$ such that $\Sigma_N$ includes all of those assumptions. Thus, $\Sigma_N \proves \bot$. But we have already shown that $\Sigma_N$ must be consistent, so we have our contradiction.
+   
+   Also, given any p-formula $\psi$, there is some natural $n$ such that $\phi_n \is \psi$, so one of $\psi$ or $\neg \psi$ are in $\Sigma$. Since $\Sigma$ is consistent, it cannot be the case that both $\psi, \neg \psi \in \Sigma$, so $\Sigma$ is complete. By Lemma \ref{lemma_uniqueAssignment}, there is an assignment $s$ that satisfies $\Sigma$. Since $\Delta \subseteq \Sigma$, $s$ also satisfies $\Delta$, thus $\Delta$ is satisfiable and we are done.
+   
+\end{proof}
+
+\begin{definition}
+    A set $\Gamma$ of p-formulas is finitely satisfiable if and only if all of its finite subsets are satisfiable.
+\end{definition}
+
+\begin{theorem}[Compactness Theorem]
+    A set $\Gamma$ of p-formulas is satisfiable if and only if it is finitely satisfiable.
+\end{theorem}
+
+\begin{proof}
+   The forward direction is trivial, so we focus on the converse. Assume that $\Gamma$ is not satisfiable. It follows vacuously that $\Gamma \models \bot$, so $\Gamma \proves \bot$ by the Completeness Theorem. Since every proof is finite, there must be some $\Gamma_0 \subseteq \Gamma$ such that $\Gamma_0 \proves \bot$. By the Soundness Theorem, $\Gamma_0 \models \bot$, therefore it is not satisfiable.
+\end{proof}
+
+\section{First-order Logic}
+
+Throughout this section $\lang$ will denote an arbitrary first-order language.
+
+\begin{definition}
+    An $\lang$-string $t$ is called an $\lang$-term if and only if 
+    \begin{enumerate}
+        \item $t \in Vars$, or
+        \item $t$ is a constant symbol of $\lang$, or
+        \item $t \is f t_1, \dots t_n$ where $t_1, \dots t_n$ are $\lang$-terms and $f$ is an $n$-ary function symbol from $\lang$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  An $\lang$-string $\phi$ is called an $\lang$-formula if and only if 
+  
+  \begin{enumerate}
+      \item $\phi \is =t_1 t_2$, where $t_1, t_2$ are $\lang$-terms, or
+      \item $\phi \is R t_1, \dots, t_n$ where $t_1, \dots t_n$ are $\lang$-terms and $R$ is an $n$-ary relation symbol from $\lang$, or
+      \item $\phi \is (\alpha \limplies \beta)$, where $\alpha, \beta$ are $\lang$-formulas, or
+      \item $\phi \is (\neg \alpha)$, where $\alpha$ is a $\lang$-formula, or
+      \item $\phi \is (\forall x) (\alpha)$, where $x$ is a variable and $\alpha$ is an $\lang$-formula.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  We say that $\struct{A}$ is an $\lang$-structure if and only if $\struct{A}$ is a (possibly infinite) tuple $(A, c_1^\struct{A}, c_2^\struct{A}, \dots, f_1^\struct{A}, f_2^\struct{A}, \dots, R_1^\struct{A}, R_2^\struct{A}, \dots)$ where $A$ is a nonempty set, $c_1, c_2, \dots$ are all of the constant symbols of $\lang$, $f_1, f_2 \dots$ are the functions symbols of $\lang$ and similarly for $R_1, R_2, \dots$. We also require that:
+  
+  \begin{enumerate}
+      \item For each constant symbol $c \in \lang$,  $c^\struct{A} \in A$;
+      \item For each $n$-ary function symbol $f \in \lang$, $f^\struct{A}: A^n \to A$, i.e $f^\struct{A}$ is a function from $A^n$ to $A$. 
+      \item For each $n$-ary relation symbol $R \in \lang$, $R^\struct{A} \subseteq A^n$.
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}
+  Let $\struct{A}$ be an $\lang$ structure. An assignment function is a function with domain $Vars$ and codomain $A$. Also, for every assignment function $s : Vars \to A$ every $a \in A$ and every $x \in Vars$, we define the function $s[x|a] : Vars \to A$ as 
+  \begin{equation*}
+      s[x|a](v) = \begin{cases}
+      a, & \text{if $v = x$} \\
+      s(v) & \text{if $v \neq x$}.
+      \end{cases}
+  \end{equation*}
+\end{definition}
+
+\begin{definition} \label{def_isomorphicStructures}
+  Let $\struct{A}$ and $\struct{B}$ be $\lang$-structures. We say that $\struct{A}$ is isomorphic to $\struct{B}$ if and only if there is a bijection $f: A \to B$ such that
+  \begin{enumerate}
+      \item $f(c^\struct{A}) = c^\struct{B}$ for every constant symbol $c \in \lang$,
+      
+      \item $f(g^\struct{A}(a_1, \dots, a_n)) = g^\struct{B}(f(a_1), \dots, f(a_n))$ for every $n$-ary function symbol $g \in L$ and every $(a_1, \dots, a_n) \in A^n$,
+      
+      \item $(a_1, \dots, a_n) \in R^\struct{A} \iff (f(a_1), \dots, f(a_n)) \in R^\struct{B}$ for every $n$-ary relation symbol $R \in \lang$ and every $(a_1, \dots, a_n) \in A^n$.
+      
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}\label{def_equivalentStructures}
+  Let $\struct{A}$ and $\struct{B}$ be $\lang$-structures. We say that $\struct{A}$ is elementarily equivalent to $\struct{B}$ if and only if given any $\lang$-formula $\phi$, $\struct{A} \models \phi \iff \struct{B} \models \phi$.
+\end{definition}
+
+\begin{lemma} \label{lem_isoEquiv}
+    Let $\struct{A}$ and $\struct{B}$ be isomorphic $\lang$-structures. Given an isomorphism $f: A \to B$ and an assignment $s: Vars \to B$, we have $$\struct{B} \models \phi [s] \iff \struct{A} \models \phi[f^{-1} \circ s].$$
+\end{lemma}
+
+\begin{proof}
+   Fix an isomorphism $f: A \to B$. Throughout the lemma we will write $v$ instead of $f^{-1} \circ s$. We will show by induction on the complexity of $\phi$ that for all assignments $s: Vars \to B$, $\struct{B} \models \phi[s] \iff \struct{A} \models \phi[v]$.
+   
+   For the base case, assume $\phi \is R t_1 \dots t_n$ where $R$ is an $n$-ary relation symbol and $t_1, \dots, t_n$ are $\lang$-terms. Then 
+   
+   \begin{align*}
+       &\struct{B} \models R t_1 \dots t_n[s] &\iff \\ 
+       &(\Bar{s}(t_1), \dots, \Bar{s}(t_n)) \in R^\struct{B} &\iff \\
+       &(f(f^{-1}(\Bar{s}(t_1))), \dots, f(f^{-1}(\Bar{s}(t_n)))) \in R^\struct{B} &\iff \\
+       &(\Bar{v}, \dots, \Bar{v}(t_n)) \in R^\struct{A} &\iff \\
+       &\struct{A} \models \phi[v].
+   \end{align*}
+   The cases $\phi \is \alpha \lor \beta$ and $\phi \is (\neg \alpha)$ are straightforward. For the case $\phi \is \forall x \psi$, assume the inductive hypothesis and notice that 
+   \begin{align*}
+       &\struct{B} \models \forall x \psi[s] &\iff \\
+       &\struct{B} \models \psi [s[x|b]] \text{ for every $b \in B$.} &\iff \\
+       &\struct{A} \models \psi[f^{-1} \circ s[x|b]] \text{ for every $b \in B$.} &\iff \\
+       &\struct{A} \models \psi[(f^{-1} \circ s)[x|a]] \text{ for every $a \in A$.} &\iff \\
+       &\struct{A} \models \forall x \psi[v].
+   \end{align*} 
+   
+   The result follows by induction.
+
+\end{proof}
+
+\begin{theorem}
+    If $\struct{A}$ and $\struct{B}$ are isomorphic $\lang$-structures, then they are elementarily equivalent.
+\end{theorem}
+
+\begin{proof}
+   Let $\struct{A}$ and $\struct{B}$ be isomorphic $\lang$-structures and assume that $\struct{A} \models \phi$. Let $s: Vars \to B$ be an arbitrary assignment function into $\struct{B}$. By Lemma \ref{lem_isoEquiv}, we have $\struct{B} \models \phi[s] \iff \struct{A} \models \phi[f^{-1} \circ s]$, where $f:A \to B$ is an isomorphism. Since $A \models \phi[s']$ for any assignment $s'$, the result follows. The converse follows similarly.
+\end{proof}
+
+
+
+\section{Computability Theory}
+
+\begin{definition}
+  We define $\prt{O} : \emptyset \to \N$ as the function with no arguments that returns $0$. $\prt{S} : \N \to \N$ is such that $\prt{S}(x) = x + 1$ for every $x \in \N$. For each $n \in \N$ we define the projection function $\prt{I}^n_i : \N^n \to \N$ for each $1 \leq i \leq n$ as $\prt{I}^n_i(x_1, x_2, \dots, x_i, \dots, x_n) = x_i$ for all $x_1, \dots x_n \in \N$.
+  
+  The functions above are collectively called the initial functions.
+\end{definition}
+
+\begin{definition}
+  We define the set of computable functions as follows:
+  
+  \begin{enumerate}
+      \item The initial functions are computable.
+      
+      \item If $h$ is a computable function of arity $m$ (possibly $0$) and $g_1, \dots, g_m$ are functions of arity $n$, then $f(x_1, \dots x_n) = h(g_1(\utilde{x}), \dots, g_m(\utilde{x}))$.
+      
+     \item If $g$ is a computable function of arity $n$ and $h$ is a computable function of arity $n+2$, then the function $f$ given by 
+     \begin{align*}
+         &f(\utilde{x}, 0) = g(\utilde{x}) \\
+         &f(\utilde{x}, y+1) = h(\utilde{x}, y, f(\utilde{x}, y))
+     \end{align*} is a computable function.
+     
+     \item If $g$ is a computable function of arity $n+1$, then $f(\utilde{x}, y) = (\mu i \leq y) (g(\utilde{x}, i))$ is computable.
+  \end{enumerate}
+\end{definition}
+
+\section{Exercises}
+
+\exc{7.3.8}
+\begin{enumerate}[(a)]
+    \item The statement clearly holds for the initial functions, so assume inductively that $f(\utilde{x}) = h(g_1(\utilde{x}), \dots, g_m(\utilde{x}))$ where $g$ and $h$ meet the inductive hypothesis. Then $f(\utilde{x}) \leq g_i(\utilde{x}) + K_h \leq x_j + K_g + K_h$. The result follows by setting $K := K_g + K_h$.
+    
+    \item The result follows easily if $f$ is of rank $0$, so assume that it is not. Then $f()$
+\end{enumerate}
+
+\exc{7.3.9}
+\begin{enumerate}[(a)]
+    \item To show that $A(y, x)$ is a natural number we induct on $y$. The base case is straightforward, so assume that $A(y, x)$ is defined for all $x$. To show that $A(y+1, x)$ is defined for all $x$, we now induct on $x$. For the base case, $A(y+1, 0) = 2$ by definition, so assume that $A(y+1, x)$ is defined. Then $A(y+1, x+1) = A(y, A(y+1, x))$ by definition. But $A(y+1, x)$ is defined by the second inductive hypothesis therefore $A(y, A(y+1, x))$ is defined by the first inductive hypothesis.
+    
+    It is easy to see that $A(1, x) = 2x + 2$ and $A(2, x) = 2^{x+2}-2 > 2^x$ by induction.
+\end{enumerate}
+
+\section{Turing Machines}
+
+\begin{definition}
+  We will denote the set $\set{0, 1}$ by $S$, $\set{-1, 1}$ by $D$, and any non-empty string will be called a state.
+\end{definition}
+
+\begin{definition}
+  A Turing Machine is a tuple $(Q, T)$ where $Q$ is a set of states containing the string $A$ but not containing $H$, and $T: Q \times S \to Q \cup \set{H} \times S \times D$ is a transition function.
+\end{definition}
+
+\begin{definition}
+  Given a Turing Machine $\mathrm{TM} = (Q, T)$ we define a function $\step{TM}: S^{\Z} \times \N \to S^{\Z} \times Q \cup {H} \times \Z$ called $\mathrm{TM}$'s step function inductively. Fix some $I_0: \Z \to S$. For the base case, let $\step{TM}(I_0, 0) := (I_0, A, 0)$. Now assume that $\step{TM}(I_0, n) = (I_n, q_n, h_n)$ is defined. If $q_n = H$, then let $\step{TM}(I_0, n+1) := \step{TM}(I_0, n)$. Otherwise, let $T(q_n, I_n(h_n)) = (q_{n+1}, s_{n+1}, d_{n+1})$ and let $I_{n+1}$ be the same function as $I_n$, except possibly at $h_n$, where we set $I_{n+1}(h_n) = s_{n+1}$. Then define $\step{TM}(I_0, n+1) := (I_{n+1}, q_{n+1}, h_n+d_{n+1})$.
+\end{definition}
+
+\begin{definition}
+  We say that a Turing Machine $\mathrm{TM}$ halts on input $I$ if and only if we have $\step{TM}(I, n) = (I', H, z)$ for appropriate $I'$ and $z$ and some $n \in \N$. In that case we also say that $\mathrm{TM}$ halts in $n$ steps. 
+\end{definition}
+
+Notice that the step function of a Turing Machine that halts on some input is eventually constant at that input, but the converse is not always true.
+
+
+
+\end{document}
