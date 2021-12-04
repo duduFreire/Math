@@ -15,7 +15,7 @@
 \newtheorem{theorem}{Theorem}[subsection]
 \newtheorem{lemma}{Lemma}[subsection]
 
-\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{corollary}{Corollary}[subsection]
 \newtheorem{proposition}{Proposition}[subsection]
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
@@ -48,7 +48,6 @@
 \newcommand{\prt}[1]{\mathcal{#1}}
 \newcommand{\lep}[1][L]{#1et $\epsilon > 0$ be arbitrary}
 \newcommand{\seq}[1]{\left(#1\right)_{n=1}^\infty}
-\newcommand{\LIM}[1]{\text{LIM}_{n \to \infty} #1}
 \newcommand{\ball}[3]{B_{#1}^{#3}(#2)}
 \newcommand{\closure}[2][3]{%
 {}\mkern#1mu\overline{\mkern-#1mu#2}}
@@ -73,7 +72,191 @@
 
 \maketitle
 
-\setcounter{section}{1}
+\section{Metric Spaces}
+\subsection{Completing a Metric Space}
+
+\begin{definition}
+   Let $X$ be a set and $d: X \times X \to \R$ be a function. We say that $(X, d)$ is a metric space if and only if for all $x,y,z \in X$,
+   \begin{enumerate}
+       \item $d(x, y) = 0 \iff x = y$,
+       \item $d(x, y) = d(y, x)$,
+       \item $d(x, y) \leq d(x, z) + d(z, y)$.
+   \end{enumerate}
+\end{definition}
+
+\begin{remark}
+    Notice that on any metric space $(X, d)$ we have $d(x, y) \geq 0$ for all $x, y \in X$, since
+    $0 = d(x, x) \leq d(x, y) + d(y, x) = 2 d(x, y)$.
+\end{remark}
+
+Throughout this section $(X, d)$ will be an arbitrary metric space.
+
+\begin{definition}
+   For each $\epsilon > 0$ we define the open ball around with radius $\epsilon$ around $x$ as $B^d_\epsilon(x) := \set{y \in X \mid d(x, y) < \epsilon}$.
+\end{definition}
+
+\begin{definition}
+   A sequence $x: \N \to X$ is Cauchy if and only if for all $\epsilon > 0$ there is a natural number $N$ such that for all naturals $n,m \geq N$ we have $d(x_n, x_m) < \epsilon$. We also define the set $\prt{C}(X) := \set{x: \N \to X \mid \text{$x$ is Cauchy}}$ of Cauchy sequences of $X$.
+\end{definition}
+
+
+\begin{definition}
+    A sequence $x: \N \to X$ converges if and only if there is some $L \in X$ such that $\lim_{n \to \infty} d(x_n, L) = 0$. In that case, we say that $x$ converges to $L$ or that the limit of $x$ is $L$. 
+    
+    Furthermore, we say that a metric space is complete if and only if all of its Cauchy sequences converge.
+\end{definition}
+
+\begin{lemma}
+    Every convergent sequence is Cauchy.
+\end{lemma}
+
+\begin{proof}
+    Let $x: \N \to X$ be a sequence that converges to $L \in X$. Now let $\epsilon > 0$ be arbitrary and choose $N \in \N$ such that $d(x_n, L) < \epsilon/2$ for all $n \geq N$. Then,
+    
+    \begin{equation*}
+        d(x_n, x_m) \leq d(x_n, L) + d(L, x_m) < \epsilon/2 + \epsilon/2 = \epsilon
+    \end{equation*} for all $n,m \geq N$. Thus $x$ is Cauchy, as we wanted to show.
+\end{proof}
+
+\begin{lemma}
+    The limit of a Cauchy sequence is unique.
+\end{lemma}
+
+\begin{proof}
+    Assume for contradiction that there is a Cauchy sequence $x: \N \to X$ and $L, L'$ with $L \neq L'$ such that $x$ converges to both $L$ and $L'$. Since $d(L, L') > 0$, we must have some $N_1 \in \N$ such that $d(x_n, L) < d(L, L')/2$ for all $n \geq N_1$ and some $N_2 \in \N$ such that $d(x_n, L') < d(L, L')/2$ for all $n \geq N_2$. So let $N := \max{N_1, N_2}$ and fix some $n \geq N$.
+    
+    We have that $d(x_n, L) < d(L, L')/2$ and $d(x_n, L') < d(L, L')/2$. Summing the inequalities we get that $d(L, x_n) + d(x_n, L') < d(L, L')$. But, by the triangle inequality, $d(L, L') \leq d(L, x_n) + d(x_n, L')$, a contradiction. 
+\end{proof}
+
+\begin{remark}
+    Not every metric space is complete. Consider for example $Q = (\Q, d)$, where $d: \Q \times \Q \to \R$ is given by $d(p, q) = \abs{p - q}$ for all $p, q \in \Q$. Clearly, $Q$ is a metric space, but the Cauchy sequence
+    
+    \begin{equation*}
+        (3, 3.1, 3.14, 3.141, 3.1415, 3.14159, \dots)
+    \end{equation*} does not converge, since $\pi$ is irrational.
+\end{remark}
+
+\begin{definition}
+   We will say that two sequences $x,y: \N \to X$ are equivalent if and only if $\lim_{n \to \infty} d(x_n, y_n) = 0$. This defines an equivalence relation $\sim$ on $\prt{C}(X)$, namely $x \sim y \iff \text{$x$ is equivalent to $y$}$.
+\end{definition}
+
+\begin{remark}
+     It is obvious that $\sim$ is reflexive and symmetric, so we check only that it is transitive. Assume that $x, y, z \in \prt{C}(X)$ and $x\sim y$ and $y \sim z$. Let $\epsilon > 0$ be arbitrary. Choose $N_1 \in \N$ such that $d(x_n, y_n) < \epsilon/2$ for all $n \geq N_1$ and $N_2 \in \N$ such that $d(y_n, z_n) < \epsilon/2$ for all $n \geq N_2$ and set $N := \max{N_1, N_2}$. For any $n \geq N$ we have $d(x_n, z_n) \leq d(x_n, y_n) + d(y_n, z_n) < \epsilon/2 + \epsilon/2 = \epsilon$, so $x \sim z$ as we wanted to show.
+\end{remark}
+
+\begin{lemma} \label{lem_equivIsCauchy}
+    If $x \in \prt{C}(X)$ is equivalent to $y: \N \to X$, then $y$ is also Cauchy.
+\end{lemma}
+
+\begin{proof}
+    Let $\epsilon > 0$ be arbitrary. Choose $N$ large enough so that $\abs{x_n - y_n} < \epsilon/3$ and $\abs{x_n - x_m} < \epsilon/3$ for all $n,m \geq N$. Now let $n,m \geq N$ be arbitrary. Then, we have
+    
+    \begin{align*}
+        &\abs{y_n - y_m} \leq \abs{y_n-x_n} + \abs{x_n-y_m} \\
+        &\leq \abs{y_n-x_n} + \abs{x_n-x_m} + \abs{x_m-y_m} \\
+        &< \epsilon/3 + \epsilon/3 + \epsilon/3 = \epsilon,
+    \end{align*} so $y$ is Cauchy, as we wanted to show.
+\end{proof}
+
+\begin{lemma} \label{lem_equivConvergeToSameLimit}
+    If a Cauchy sequence $x$ converges and $x \sim y$, then $y$ converges to the same limit as $x$.
+\end{lemma}
+
+\begin{proof}
+    Let $x, y \in \prt{C}(X)$ and assume that $x \sim y$ and $\lim x = L$. Notice that for all $n \in \N$ we have $0 \leq d(y_n, L) \leq d(y_n, x_n) + d(x_n, L)$. By the squeeze theorem we can conclude that $y$ converges to $L$.
+\end{proof}
+
+\begin{definition}
+   Let $\Tilde{X}$ denote the set of all equivalence classes of $\prt{C}(X)$ under $\sim$, namely 
+       $\Tilde{X} := \set{[x] \mid  x \in \prt{C}(X)}$, where $[x] = \set{y \in \prt{C}(x) \mid x \sim y}$. We also define the function $\Tilde{d}: \Tilde{X} \times \Tilde{X} \to \R$ as $\Tilde{d}([x], [y]) = \lim_{n \to \infty} d(x_n, y_n)$ for all $x, y \in \prt{C}(X)$.
+\end{definition}
+
+\begin{lemma} \label{lem_metricDFunc}
+    The function $\Tilde{d}$ is well-defined
+\end{lemma}
+
+\begin{proof}
+    First we show that if the sequences $(x_n), (y_n)$ are Cauchy, then $\lim_{n \to \infty} d(x_n, y_n)$ exists.
+    Let $\epsilon > 0$ be arbitrary. Since $(x_n)$ is Cauchy, we can choose $N_1 \in \N$ such that $d(x_n, x_m) < \epsilon/2$ for all $n, m \geq N_1$. Similarly, we can choose $N_2 \in \N$ such that $(y_n)$ satisfies the analogous condition.
+    
+    Now set $N := \max{N_1, N_2}$ and fix arbitrary $n,m \geq N$. Notice that $d(x_n,y_n)-d(x_m, y_n) \leq d(x_n, x_m)$ and $d(x_m, y_n)-d(x_n,y_n) \leq d(x_n, x_m)$, so $\abs{d(x_m, y_n)-d(x_n,y_n)} \leq d(x_n, y_m) < \epsilon/2$. Similarly, $\abs{d(x_m, y_n)-d(x_m, y_m)} \leq d(y_n, y_m) < \epsilon/2$. Thus, we have 
+    \begin{align*}
+        &\abs{d(x_n, y_n) - d(x_m, y_m)} \leq \abs{d(x_n, y_n) - d(x_m, y_n)} + \abs{d(x_m, y_n) - d(x_m, y_m)} \\
+        &< \epsilon/2 + \epsilon/2 = \epsilon,
+    \end{align*} so $(d(x_n, y_n))$ is a Cauchy sequence of reals, and therefore converges.
+    
+    Next, assume that $a,b,x,y \in \prt{C}(X)$ and $a \sim x$ and $b \sim y$. In order to show that $\Tilde{d}([a], [b]) = \Tilde{d}([x], [y])$ we will show that the Cauchy sequences of reals $(d(x_n, y_n))$ and $(d(a_n, b_n))$ are equivalent. To do that, let $\epsilon > 0$ be arbitrary.
+    
+    Using the fact that $x$ is equivalent to $a$ and $y$ is equivalent $b$, pick $N \in \N$ such that $d(x_n, a_n) < \epsilon/2$ and $d(y_n, b_n) < \epsilon/2$ for all $n \geq N$. Now fix some $n \geq N$ and, similarly to before, we have $\abs{d(x_n, y_n)-d(a_n, y_n)} \leq d(x_n, a_n) < \epsilon/2$ and $\abs{d(a_n, y_n), d(a_n, b_n)} \leq d(y_n, b_n) < \epsilon/2$, thus
+    \begin{align*}
+        &\abs{d(x_n, y_n) - d(a_n, b_n)} \leq 
+        \abs{d(x_n, y_n) - d(a_n, y_n)} + 
+        \abs{d(a_n, y_n) - d(a_n, b_n)}
+        \\ &< \epsilon/2 + \epsilon/2 = \epsilon.
+    \end{align*}
+\end{proof}
+
+\begin{remark}
+     $(\Tilde{X}, \Tilde{d})$ is a metric space. The three conditions that $\Tilde{d}$ must hold follow easily from Lemma \ref{lem_metricDFunc}.
+\end{remark}
+
+\begin{definition}
+   An element $[x] \in \Tilde{X}$ is called rational if and only if $x \sim y$ where $y \in \prt{C}(X)$ is a constant Cauchy sequence. We also say that a sequence in $\Tilde{X}$ is rational if and only if all of its elements are rational.
+\end{definition}
+
+\begin{definition}
+   We say that $\Tilde{X}$ is dense if and only if for each $[x] \in \Tilde{X}$ and each $\epsilon > 0$ there is an open ball $B^{\Tilde{d}}_\epsilon([x])$ that contains a rational element of $\Tilde{X}$.
+\end{definition}
+
+\begin{lemma} \label{lem_rationalSequencesConverge}
+    Every rational sequence in $\prt{C}(\Tilde{X})$ converges.
+\end{lemma}
+
+\begin{proof}
+    Consider a rational sequence $([x_n]) \in \prt{C}(\Tilde{X})$. Since each element is rational, we can fix for each $n \in \N$ some constant sequence $y_n \in \prt{C}(X)$ such that $y_n \sim x_n$. We claim that $([x_n])$ converges to $[(y_n(1))]$. Notice that since $x_n \sim y_n$, we have $[x_n] = [y_n]$ for each $n \in \N$, so it suffices to show that $([y_n])$ converges to $[(y_n(1))]$.
+    
+    So we have to show that 
+    \begin{equation*}
+        \lim_{n \to \infty} \Tilde{d}([y_n], [(y_n(1))]) = \lim_{n \to \infty} \lim_{m \to \infty} 
+        d(y_n(1), y_m(1)) = 0,
+    \end{equation*} so let $\epsilon > 0$ be arbitrary. Use the fact that $(y_n)$ is Cauchy to choose an $N \in \N$ such that $\Tilde{d}([y_n], [y_m]) < \epsilon/2$ for all $n,m \geq N$. Since each $y_n$ is constant, we have $\Tilde{d}([y_n], [y_m]) = d(y_n(1), y_m(1))$. Fix some $n \geq N$ and notice that $d(y_n(1), y_m(1)) < \epsilon/2$ for all $m \geq N$. Thus $\lim_{m \to \infty} d(y_n(1), y_m(1)) \leq \epsilon/2 < \epsilon$.
+    
+\end{proof}
+
+\begin{corollary}
+    If $\Tilde{X}$ is dense, then it is complete.
+\end{corollary}
+
+\begin{proof}
+    Assume that $\Tilde{X}$ is dense and let $f \in \prt{C}(\Tilde{X})$ be arbitrary. For each $n \in \N$, the denseness of $\Tilde{X}$ guarantees that there is some ball of radius $1/n$ around $f(n)$ that contains a rational element $[q_n]$ of $\Tilde{X}$. But then the sequence $([q_n])$ is clearly equivalent to $f$, since the construction of the sequence guarantees that $d(f(n), q_n) < 1/n$ for each $n \in \N$, so $([q_n])$ is Cauchy by Lemma \ref{lem_equivIsCauchy}. But $([q_n])$ is a rational sequence, so Lemma \ref{lem_rationalSequencesConverge} guarantees that $([q_n])$ converges. Finally, it follows from Lemma \ref{lem_equivConvergeToSameLimit} that $f$ must also converge.
+\end{proof}
+
+\begin{lemma} \label{lem_cauchySequenceEquivToRationalSequence}
+    In $(\Tilde{X}, \Tilde{d})$, every Cauchy sequence is equivalent to a rational Cauchy sequence.
+\end{lemma}
+
+\begin{proof}
+    Let $f \in \prt{C}(\Tilde{X})$ be an arbitrary Cauchy sequence.
+    For each $n \in \N$, we have $f(n) = [x_n]$ where $x_n \in \prt{C}(X)$. Then, there is some $K_n \in \N$ such that $d(x_n(K_n), x_n(m)) < 1/n$ for all $m \geq K_n$, since $x_n$ is Cauchy. Then, let $g: \N \to \Tilde{X}$ be the sequence given by 
+    \begin{equation*}
+        g(n) = [(x_n(K_n), x_n(K_n), x_n(K_n), \dots)].
+    \end{equation*} It is clear that $g$ is a rational sequence by construction. To see that $g$ is equivalent to $f$ we will first show that for each $n \in \N$ we have 
+    
+    \begin{equation*}
+        \lim_{m \to \infty} d(x_n(m), x_n(K_n)) \leq 1/n.
+    \end{equation*} To do this, let $n \in \N$ be arbitrary and notice that by the construction of $K_n$, we have that $0 \leq d(x_n(m), x_n(K_n)) < 1/n \leq 1/n$ for all $m \geq K_n$. Applying the squeeze theorem gets us the desired result. Notice that since $\Tilde{d}([x_n], g(n)) = \lim_{m \to \infty} d(x_n(m), x_n(K_n))$, we have shown that $\Tilde{d}([x_n], g(n)) \leq 1/n$ for each $n \in \N$.
+    
+    The main result then follows easily. We have that $f$ is equivalent to $g$ if and only if $\lim_{n \to \infty} \Tilde{d}([x_n], g(n)) = 0$, but $0 \leq \Tilde{d}([x_n], g(n))  \leq 1/n$ for each $n \in \N$, so applying the squeeze theorem one more time finishes the proof.
+\end{proof}
+
+\begin{theorem}
+    The metric space $(\Tilde{X}, \Tilde{d})$ is complete.
+\end{theorem}
+
+\begin{proof}
+    Consider an arbitrary Cauchy sequence $f \in \prt{C}(\Tilde{X})$. By Lemma \ref{lem_cauchySequenceEquivToRationalSequence}, $f$ is equivalent to a rational Cauchy sequence $g \in \prt{C}(\Tilde{X})$. But Lemma \ref{lem_rationalSequencesConverge} shows that $g$ converges, so $f$ must converge by Lemma \ref{lem_equivConvergeToSameLimit}.
+\end{proof}
+
 \section{Topological Spaces and Continuous Functions}
 
 \setcounter{subsection}{11}
