@@ -1,28 +1,30 @@
-\documentclass{article}
+\documentclass{report}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage{xparse}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{amssymb}
 \usepackage{mathtools}
 \usepackage{amsfonts}
 \usepackage{indentfirst}
-\usepackage{enumitem}
+\usepackage[shortlabels]{enumitem}
 \usepackage{microtype}
 \usepackage[colorlinks=true,linkcolor=blue]{hyperref}
 
 \setlist{parsep=0pt,listparindent=\parindent}
 
-\newtheorem{theorem}{Theorem}[subsection]
-\newtheorem{lemma}{Lemma}[subsection]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
 
-\newtheorem{corollary}{Corollary}[subsection]
-\newtheorem{proposition}{Proposition}[subsection]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[subsection]
+\newtheorem{definition}{Definition}[section]
 \theoremstyle{remark}
-\newtheorem{remark}{Remark}[subsection]
+\newtheorem{remark}{Remark}[section]
 
-\newenvironment{exc}[1]{\noindent\textbf{Exercise \thesubsection.#1.}}{\medskip}
+\newenvironment{exc}[1]{\noindent\textbf{Exercise \thesection.#1.}}{\medskip}
 
 
 \DeclarePairedDelimiter\abs{\lvert}{\rvert}
@@ -45,12 +47,13 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\paren}[1]{\left( #1 \right)}
 \newcommand{\set}[1]{\{#1\}}
+\newcommand{\seq}[2][n \in \N]{\left( #2 \right)_{#1}}
 \newcommand{\prt}[1]{\mathcal{#1}}
 \newcommand{\lep}[1][L]{#1et $\epsilon > 0$ be arbitrary}
-\newcommand{\seq}[1]{\left(#1\right)_{n=1}^\infty}
 \newcommand{\ball}[3]{B_{#1}^{#3}(#2)}
 \newcommand{\closure}[2][3]{%
 {}\mkern#1mu\overline{\mkern-#1mu#2}}
+\newcommand*\concat{\mathbin{\vcenter{\hbox{\rule{.3ex}{.3ex}}}}}
 
 \let\oldlog\log
 \let\oldmax\max
@@ -71,9 +74,11 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
 
-\section{Metric Spaces}
-\subsection{Completing a Metric Space}
+\part{Munkres}
+\chapter{Metric Spaces}
+\section{Basics}
 
 \begin{definition}
    Let $X$ be a set and $d: X \times X \to \R$ be a function. We say that $(X, d)$ is a metric space if and only if for all $x,y,z \in X$,
@@ -92,7 +97,7 @@
 Throughout this section $(X, d)$ will be an arbitrary metric space.
 
 \begin{definition}
-   For each $\epsilon > 0$ we define the open ball around with radius $\epsilon$ around $x$ as $B^d_\epsilon(x) := \set{y \in X \mid d(x, y) < \epsilon}$.
+   We will call a function $f : \N \to X$ a sequence in $X$. In that case, we will sometimes write $f_n$ instead of $f(n)$. When $X$ is clear from the context, we might also write $f = \seq{a_n}$ to mean that $f$ is a sequence in $X$ where $f(n) = a_n$ for each $n \in \N$.
 \end{definition}
 
 \begin{definition}
@@ -149,22 +154,24 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
 \end{lemma}
 
 \begin{proof}
-    Let $\epsilon > 0$ be arbitrary. Choose $N$ large enough so that $\abs{x_n - y_n} < \epsilon/3$ and $\abs{x_n - x_m} < \epsilon/3$ for all $n,m \geq N$. Now let $n,m \geq N$ be arbitrary. Then, we have
+    Let $\epsilon > 0$ be arbitrary. Choose $N$ large enough so that $d(x_n, y_n) < \epsilon/3$ and $d(x_n, x_m) < \epsilon/3$ for all $n,m \geq N$. Now let $n,m \geq N$ be arbitrary. Then, we have
     
     \begin{align*}
-        &\abs{y_n - y_m} \leq \abs{y_n-x_n} + \abs{x_n-y_m} \\
-        &\leq \abs{y_n-x_n} + \abs{x_n-x_m} + \abs{x_m-y_m} \\
+        &d(y_n, y_m) \leq d(y_n, x_n) + d(x_n, y_m) \\
+        &\leq d(y_n, x_n) + d(x_n, x_m) + d(x_m, y_m) \\
         &< \epsilon/3 + \epsilon/3 + \epsilon/3 = \epsilon,
     \end{align*} so $y$ is Cauchy, as we wanted to show.
 \end{proof}
 
 \begin{lemma} \label{lem_equivConvergeToSameLimit}
-    If a Cauchy sequence $x$ converges and $x \sim y$, then $y$ converges to the same limit as $x$.
+    If a sequence $x$ converges and $x \sim y$, then $y$ converges to the same limit as $x$.
 \end{lemma}
 
 \begin{proof}
-    Let $x, y \in \prt{C}(X)$ and assume that $x \sim y$ and $\lim x = L$. Notice that for all $n \in \N$ we have $0 \leq d(y_n, L) \leq d(y_n, x_n) + d(x_n, L)$. By the squeeze theorem we can conclude that $y$ converges to $L$.
+    Let $x, y: \N \to X$ and assume that $x \sim y$ and $\lim x = L$. Notice that for all $n \in \N$ we have $0 \leq d(y_n, L) \leq d(y_n, x_n) + d(x_n, L)$. By the Squeeze Theorem we can conclude that $y$ converges to $L$.
 \end{proof}
+
+\section{Completing a Metric Space}
 
 \begin{definition}
    Let $\Tilde{X}$ denote the set of all equivalence classes of $\prt{C}(X)$ under $\sim$, namely 
@@ -176,8 +183,8 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
 \end{lemma}
 
 \begin{proof}
-    First we show that if the sequences $(x_n), (y_n)$ are Cauchy, then $\lim_{n \to \infty} d(x_n, y_n)$ exists.
-    Let $\epsilon > 0$ be arbitrary. Since $(x_n)$ is Cauchy, we can choose $N_1 \in \N$ such that $d(x_n, x_m) < \epsilon/2$ for all $n, m \geq N_1$. Similarly, we can choose $N_2 \in \N$ such that $(y_n)$ satisfies the analogous condition.
+    First we show that if the sequences $\seq{x_n}, \seq{y_n}$ are Cauchy, then $\lim_{n \to \infty} d(x_n, y_n)$ exists.
+    Let $\epsilon > 0$ be arbitrary. Since $\seq{x_n}$ is Cauchy, we can choose $N_1 \in \N$ such that $d(x_n, x_m) < \epsilon/2$ for all $n, m \geq N_1$. Similarly, we can choose $N_2 \in \N$ such that $\seq{y_n}$ satisfies the analogous condition.
     
     Now set $N := \max{N_1, N_2}$ and fix arbitrary $n,m \geq N$. Notice that $d(x_n,y_n)-d(x_m, y_n) \leq d(x_n, x_m)$ and $d(x_m, y_n)-d(x_n,y_n) \leq d(x_n, x_m)$, so $\abs{d(x_m, y_n)-d(x_n,y_n)} \leq d(x_n, y_m) < \epsilon/2$. Similarly, $\abs{d(x_m, y_n)-d(x_m, y_m)} \leq d(y_n, y_m) < \epsilon/2$. Thus, we have 
     \begin{align*}
@@ -204,43 +211,32 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
    An element $[x] \in \Tilde{X}$ is called rational if and only if $x \sim y$ where $y \in \prt{C}(X)$ is a constant Cauchy sequence. We also say that a sequence in $\Tilde{X}$ is rational if and only if all of its elements are rational.
 \end{definition}
 
-\begin{definition}
-   We say that $\Tilde{X}$ is dense if and only if for each $[x] \in \Tilde{X}$ and each $\epsilon > 0$ there is an open ball $B^{\Tilde{d}}_\epsilon([x])$ that contains a rational element of $\Tilde{X}$.
-\end{definition}
-
 \begin{lemma} \label{lem_rationalSequencesConverge}
     Every rational sequence in $\prt{C}(\Tilde{X})$ converges.
 \end{lemma}
 
 \begin{proof}
-    Consider a rational sequence $([x_n]) \in \prt{C}(\Tilde{X})$. Since each element is rational, we can fix for each $n \in \N$ some constant sequence $y_n \in \prt{C}(X)$ such that $y_n \sim x_n$. We claim that $([x_n])$ converges to $[(y_n(1))]$. Notice that since $x_n \sim y_n$, we have $[x_n] = [y_n]$ for each $n \in \N$, so it suffices to show that $([y_n])$ converges to $[(y_n(1))]$.
+    Consider a rational sequence $\seq{[x_n]} \in \prt{C}(\Tilde{X})$. Since each element is rational, we can fix for each $n \in \N$ some constant sequence $y_n \in \prt{C}(X)$ such that $y_n \sim x_n$. We claim that $\seq{[x_n]}$ converges to $[\seq{y_n(1)}]$. Notice that since $x_n \sim y_n$, we have $[x_n] = [y_n]$ for each $n \in \N$, so it suffices to show that $\seq{[y_n]}$ converges to $[\seq{y_n(1)}]$.
     
     So we have to show that 
     \begin{equation*}
-        \lim_{n \to \infty} \Tilde{d}([y_n], [(y_n(1))]) = \lim_{n \to \infty} \lim_{m \to \infty} 
+        \lim_{n \to \infty} \Tilde{d}([y_n], [\seq{y_n(1)}]) = \lim_{n \to \infty} \lim_{m \to \infty} 
         d(y_n(1), y_m(1)) = 0,
-    \end{equation*} so let $\epsilon > 0$ be arbitrary. Use the fact that $(y_n)$ is Cauchy to choose an $N \in \N$ such that $\Tilde{d}([y_n], [y_m]) < \epsilon/2$ for all $n,m \geq N$. Since each $y_n$ is constant, we have $\Tilde{d}([y_n], [y_m]) = d(y_n(1), y_m(1))$. Fix some $n \geq N$ and notice that $d(y_n(1), y_m(1)) < \epsilon/2$ for all $m \geq N$. Thus $\lim_{m \to \infty} d(y_n(1), y_m(1)) \leq \epsilon/2 < \epsilon$.
+    \end{equation*} so let $\epsilon > 0$ be arbitrary. Use the fact that $\seq{y_n}$ is Cauchy to choose an $N \in \N$ such that $\Tilde{d}([y_n], [y_m]) < \epsilon/2$ for all $n,m \geq N$. Since each $y_n$ is constant, we have $\Tilde{d}([y_n], [y_m]) = d(y_n(1), y_m(1))$. Fix some $n \geq N$ and notice that $d(y_n(1), y_m(1)) < \epsilon/2$ for all $m \geq N$. Thus $\lim_{m \to \infty} d(y_n(1), y_m(1)) \leq \epsilon/2 < \epsilon$.
     
 \end{proof}
 
-\begin{corollary}
-    If $\Tilde{X}$ is dense, then it is complete.
-\end{corollary}
-
-\begin{proof}
-    Assume that $\Tilde{X}$ is dense and let $f \in \prt{C}(\Tilde{X})$ be arbitrary. For each $n \in \N$, the denseness of $\Tilde{X}$ guarantees that there is some ball of radius $1/n$ around $f(n)$ that contains a rational element $[q_n]$ of $\Tilde{X}$. But then the sequence $([q_n])$ is clearly equivalent to $f$, since the construction of the sequence guarantees that $d(f(n), q_n) < 1/n$ for each $n \in \N$, so $([q_n])$ is Cauchy by Lemma \ref{lem_equivIsCauchy}. But $([q_n])$ is a rational sequence, so Lemma \ref{lem_rationalSequencesConverge} guarantees that $([q_n])$ converges. Finally, it follows from Lemma \ref{lem_equivConvergeToSameLimit} that $f$ must also converge.
-\end{proof}
-
 \begin{lemma} \label{lem_cauchySequenceEquivToRationalSequence}
-    In $(\Tilde{X}, \Tilde{d})$, every Cauchy sequence is equivalent to a rational Cauchy sequence.
+    In $(\Tilde{X}, \Tilde{d})$, every sequence is equivalent to a rational sequence.
 \end{lemma}
 
 \begin{proof}
-    Let $f \in \prt{C}(\Tilde{X})$ be an arbitrary Cauchy sequence.
+    Let $f \in \prt{C}(\Tilde{X})$ be an arbitrary sequence.
     For each $n \in \N$, we have $f(n) = [x_n]$ where $x_n \in \prt{C}(X)$. Then, there is some $K_n \in \N$ such that $d(x_n(K_n), x_n(m)) < 1/n$ for all $m \geq K_n$, since $x_n$ is Cauchy. Then, let $g: \N \to \Tilde{X}$ be the sequence given by 
-    \begin{equation*}
-        g(n) = [(x_n(K_n), x_n(K_n), x_n(K_n), \dots)].
-    \end{equation*} It is clear that $g$ is a rational sequence by construction. To see that $g$ is equivalent to $f$ we will first show that for each $n \in \N$ we have 
+    \begin{align*}
+        g(n) &= [(x_n(K_n), x_n(K_n), x_n(K_n), \dots)] \\
+             &= [\seq[m \in \N]{x_n(K_n)}].
+    \end{align*} It is clear that $g$ is a rational sequence by construction. To see that $g$ is equivalent to $f$ we will first show that for each $n \in \N$ we have 
     
     \begin{equation*}
         \lim_{m \to \infty} d(x_n(m), x_n(K_n)) \leq 1/n.
@@ -254,13 +250,13 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
 \end{theorem}
 
 \begin{proof}
-    Consider an arbitrary Cauchy sequence $f \in \prt{C}(\Tilde{X})$. By Lemma \ref{lem_cauchySequenceEquivToRationalSequence}, $f$ is equivalent to a rational Cauchy sequence $g \in \prt{C}(\Tilde{X})$. But Lemma \ref{lem_rationalSequencesConverge} shows that $g$ converges, so $f$ must converge by Lemma \ref{lem_equivConvergeToSameLimit}.
+    Consider an arbitrary Cauchy sequence $f \in \prt{C}(\Tilde{X})$. By Lemma \ref{lem_cauchySequenceEquivToRationalSequence}, $f$ is equivalent to a rational sequence $g \in \prt{C}(\Tilde{X})$. Notice that $g$ must also be Cauchy, by Lemma \ref{lem_equivIsCauchy}. But then Lemma \ref{lem_rationalSequencesConverge} guarantees that $g$ converges, so $f$ must converge by Lemma \ref{lem_equivConvergeToSameLimit}.
 \end{proof}
 
-\section{Topological Spaces and Continuous Functions}
+\chapter{Topological Spaces and Continuous Functions}
 
-\setcounter{subsection}{11}
-\subsection{Topological Spaces}
+\setcounter{section}{11}
+\section{Topological Spaces}
 
 
 \begin{definition}\label{def_topology}
@@ -278,7 +274,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     Let $\prt{T}, \prt{T'}$ be topologies on $X$. We say that $\prt{T'}$ is finer than $\prt{T}$ if and only if $\prt{T} \subset \prt{T'}$. Similarly, $\prt{T'}$ is coarser than $\prt{T}$ if and only if $\prt{T'} \subset \prt{T}$. 
 \end{definition}
 
-\subsection{Basis for a Topology}
+\section{Basis for a Topology}
 
 \begin{definition}\label{def_basis}
     A collection $\prt{B}$ of subsets of $X$ is called a basis for a topology on $X$ if and only if it satisfies the following conditions:
@@ -297,7 +293,6 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     It is easy to see that clauses $1$ and $2$ in Definition \ref{def_topology} hold using the first clause in the definition of a basis. For the last clause, assume that $A,B \in \prt{T}$ and let $x \in A \cap B$ be arbitrary. Since $A$ and $B$ are in $\prt{T}$, there are $B_1, B_2 \in \prt{B}$ such that $x \in B_1 \subset A$ and $x \in B_2 \subset B$. It follows that $x \in B_1 \cap B_2 \subset A \cap B$. By clause 2 in the definition of a basis, there is some $B_3 \in \prt{B}$ such that $x \in B_3 \subset B_1 \cap B_2 \subset A \cap B$, thus $A \cap B \in \prt{T}$.
 \end{proof}
 
-\newpage
 \begin{lemma} \label{lemma_basis_makes_topology}
     Let $\prt{B}$ be the basis for a topology $\prt{T}$ on $X$ (so $\prt{T}$ is the topology generated by $\prt{B}$). Then $\prt{T}$ is the collection of all unions of elements of $\prt{B}$.
 \end{lemma}
@@ -342,7 +337,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
      It might not be clear at first that the set generated by $\prt{S}$ is a topology on $X$. To see that it is, notice that the collection of all finite intersections of elements of $\prt{S}$ is a basis $\prt{B}$. Then, the collection of all arbitrary unions of elements of $\prt{B}$ is the topology generated by $\prt{B}$, according to Lemma \ref{lemma_basis_makes_topology}.
 \end{remark}
 
-\subsection{The Order Topology}
+\section{The Order Topology}
 
 \begin{definition}\label{def_order_basis}
     Let $X$ be a set with more than one element and $<$ be a strict linear order on $X$. We define the set $\prt{B}$ by 
@@ -379,7 +374,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     Also, the interval $[0, 1)$ is open in the lower limit topology, but not in the standard. To see that, assume for contradiction that $[0, 1)$ is open in the standard topology. Then, there must be some $(a, b) \in \prt{B}$ such that $0 \in (a, b) \subset [0, 1)$. Since $0 \in (a, b)$, $a < 0 < b$. Then $a < a/2 < 0 < b$, so $a/2 \in (a, b)$, therefore $a/2 \in [0, b)$. Thus $a/2 \geq 0$, a contradiction. Thus, $\R_{\prt{L}}$ is strictly finer than the standard topology.
 \end{proof}
 
-\subsection{The Product Topology on \texorpdfstring{$X \times Y$}{X x Y}}
+\section{The Product Topology on \texorpdfstring{$X \times Y$}{X x Y}}
 
 \begin{definition}
     Let $X$ and $Y$ be topological spaces. The product topology $X \times Y$ is defined as the topology generated by the basis $\prt{B} = \set{U \times V : \text{$U$ is open in $X$ and $V$ is open in $Y$}}.$
@@ -393,7 +388,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     We apply Lemma \ref{lemma_collection_is_basis} to the collection $\prt{B}_x \times \prt{B}_y$ of open sets. Let $W$ be open in $X \times Y$ and $a \times b \in W$ be arbitrary. By the definition of the order topology, there is some $B \in \prt{B}$ such that $a \times b \in U \times V \subset W$, where $\prt{B}$ is the basis for $X \times Y$. Since $\prt{B}_x$ is a basis for $X$, there is some $B_x \in \prt{B}_x$ such that $a \in B_x \subset U$. Similarly, there is some $B_y \in \prt{B}_y$ such that $b \in B_y \subset V$. Then $a \times b \in B_x \times B_y \subset U \times V \subset W$, thus the conditions of the lemma just mentioned are met and $\prt{B}_x \times \prt{B}_y$ is a basis and generates the product topology.
 \end{proof}
 
-\subsection{The Subspace Topology}
+\section{The Subspace Topology}
 
 \begin{definition}\label{def_subspace_topology}
     Let $(X, \prt{T}_x)$ be a topological space. For any $Y \subset X$, we define the subspace topology as $\prt{T}_y = \set{Y \cap U : U \in \prt{T}_x}$.
@@ -418,8 +413,8 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     Let $U_y \in \prt{T}_y$ and $a \in U_y$ be arbitrary. Then $U_y = Y \cap U_x$ for some $U_x \in X$. Since $\prt{B}_x$ is a basis for $X$, there is some $B_x \in \prt{B}_x$ such that $a \in B_x \subset U_x$. It follows that $x \in Y \cap B_x \subset Y \cap U_x = U_y$. Since $Y \cap B_x \in \prt{B}_y$, the result follows from Lemma \ref{lemma_collection_is_basis}.
 \end{proof}
 
-\setcounter{subsection}{18}
-\subsection{The Product Topology}
+\setcounter{section}{18}
+\section{The Product Topology}
 
 \begin{definition} \label{def_productTopology}
     Let $(X_i)_{i \in I}$ be a collection of topological spaces. The product topology is the set generated by the basis whose elements are 
@@ -462,6 +457,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     Now we show that $\prt{T}_{unif} \subset \prt{T}_{box}$. Let $\ball{\epsilon}{x}{\overline{d}_\infty}$ be a basis element of the uniform topology.
 \end{proof}
 
+\subsection*{Exercises}
 \begin{exc}{6}
     First, assume that $(x_n) \to x$. Fix some neighborhood $U_\alpha \subset X_\alpha$ and assume for contradiction that we have infinitely many elements in the sequence $(\pi_\alpha(x_n))$ not contained in $U_\alpha$. Then, the set
     \begin{equation*}
@@ -503,5 +499,204 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     Next we show that $\closure{\R^\infty} = \R^\omega$ in the product topology. Let $x \in \R^\omega$ be arbitrary and let $U = \prod_{i \in \N} U_i$ be a neighborhood of $x$. Since $U$ is open in the product topology, every $U_i$ must be all of $\R$ whenever $i \geq I$ for some $I \in \N$. Thus, we have $y = (x_1, \dots, x_{I-1}, 0, 0, 0, \dots) \in \R^\infty$, and $y \in U$. Therefore $U \cap \R^\infty \neq \emptyset$, as we wanted to show.
     
 \end{exc}
+
+\chapter{Connectedness and Compactness}
+
+\setcounter{section}{23}
+\section{Connected Subspaces of the Real Line}
+\subsection*{Exercises}
+\begin{exc}{2}
+ Let $f : S^1 \to \R$ be a continuous function and let $g : S^1 \to \R$ be a function mapping $x$ to $f(x)-f(-x)$. Notice that $g(x) = 0$ if and only if $f(x)=f(-x)$, and for all $x \in S^1$ we have $g(x) = -g(-x)$. If $g(1, 0) = 0$ then we are done, so assume otherwise. We have either $g(1, 0) > 0 > g(-1, 0)$ or $g(-1, 0) > 0 > g(1, 0)$. In both cases, since $S^1$ is connected and $g$ is continuous, we have some $c \in S^1$ where $g(c) = 0$, by the Intermediate Value Theorem.
+\end{exc}
+
+\setcounter{section}{25}
+\section{Compact Spaces}
+\begin{definition}
+   A point $x$ of a topological space $X$ is isolated if and only if the singleton $\set{x}$ is open.
+\end{definition}
+
+\begin{lemma} \label{lem_inter_of_compact_nonempty}
+    Let $X$ be a compact topological space and $\set{U_i}_{i \in \N}$ be a countable collection of nonempty closed sets with $U_{i+1} \subset U_i$ for every $i \in \N$. Then $\bigcap_{i \in \N} U_i \neq \emptyset$.
+\end{lemma}
+
+\begin{proof}
+    Assume for contradiction that $\bigcap_{i \in \N} U_i = \emptyset$. It follows by taking the complement on both sides that $\bigcup_{i \in \N} X \setminus{U_i} = X$. Since each $U_i$ is closed their complement is open, so the collection $\set{X \setminus U_i}_{i \in \N}$ is an open cover for $X$, thus it admits a finite subcover $\prt{A} = \set{X \setminus U_{i_1} \dots, X \setminus U_{i_m}}$. It follows that $\bigcap_{j=1}^m U_{i_j} = \emptyset$. Now set $k = \max{i_1, \dots, i_m}$ and choose some $x \in U_k$. Then $x \in U_k \subset U_{k-1} \subset ... \subset U_1$, so $x \in \bigcap_{j=1}^m U_{i_j}$, which is a contradiction.
+\end{proof}
+
+\begin{theorem}
+    A compact Hausdorff Topological space with no isolated points is uncountable.
+\end{theorem}
+
+\begin{proof}
+    Let $X$ be a compact Hausdorff topological space with no isolated points. First, we prove the following claim: given any nonempty open $U \subset X$ and any $x \in X$ there is some nonempty open $V \subset U$ such that $x \notin \closure{V}$. Notice that there is some $y \in U$ with $y \neq x$, since if $x \notin U$ we get this by nonemptyness, and if $x \in U$ the result follows since $\set{x}$ cannot be open. By Hausdorfness, there are disjoint open sets $W_1, W_2$ with $x \in W_1$ and $y \in W_2$. Now set $V := W_2 \cap U$. Then $V$ is the set we want, since $V \subset U$ and $x \notin \closure{V}$, as $W_1$ is an open neighborhood of $x$ that does not intersect $V$. Also $V$ is nonempty since $y \in V$.
+    
+    Now we prove the theorem. Let $f : \N \to X$ be any function. We will show that $f$ is not surjective. Since $X$ is open, there is some open $V_1 \subset X$ where $f(1) \notin \closure{V}$. Similarly, there is some $V_2 \subset V_1$ where $f(2) \notin \closure{V_2}$. We can continue this way to construct a collection of sets so that for every natural number $n$ we have $f(n) \notin \closure{V_n}$ and 
+    \begin{equation*}
+        \closure{V_1} \supset \closure{V_2} \supset \closure{V_3} \dots
+    \end{equation*} with each $V_n$ open and nonempty.
+    
+    Since $\set{\closure{V_n}}_{n \in \N}$ is a countable collection of nonempty closed sets and $\closure{V_{n+1}} \subset \closure{V_n}$ for each $n \in \N$, Lemma \ref{lem_inter_of_compact_nonempty} implies that there is some $x \in \bigcap_{n \in \N} \closure{V_n}$. But since $x \in V_n$ for every $n \in \N$, we can conclude that $f(n) \neq x$ for every $n \in \N$, so $f$ is not surjective.
+\end{proof}
+
+\section{Compact Subspaces of the Real Line}
+
+\begin{definition}
+   If $(X, d)$ is a metric space and $A \subset X$ is nonempty, we define $d(x, A) := \inf\set{d(x, y) \mid y \in A}$.
+\end{definition}
+
+\begin{definition}
+   Let $(X, d)$ be a metric space. If $A \subset X$ is bounded, then the diameter of $A$ is $\sup\set{d(x, y) \mid (x, y) \in A \times A}$.
+\end{definition}
+
+\begin{lemma}
+    Let $\prt{A}$ be an open cover of the compact metric space $(X, d)$. There exists a $\delta > 0$ such that every subset of $X$ with diameter less than $\delta$ is contained in some element of $\prt{A}$. We call $\delta$ a Lebesgue number of $\prt{A}$.
+\end{lemma}
+
+\begin{proof}
+    We can assume that no element of $\prt{A}$ is all of $X$. Fix a finite subcover $\set{A_1, \dots, A_n}$ of $\prt{A}$ and define the function 
+    \begin{align*}
+        &f : X \to \R \\
+        &x \mapsto \frac{1}{n} \sum_{i=1}^n d(x, X \setminus A_i).
+    \end{align*} Notice that given any  $x \in X$, there is some $A_i$ with $x \in A_i$. By the openness of $A_i$, there is some $r > 0$ with $B_r(x) \subset (A_i)$, so $d(x, X \setminus A_i) \geq r > 0$, thus $f$ is positive at every input. Since $f$ is the sum of continuous functions, $f$ is continuous. Using the compactness of $X$, we know by the Extreme Value Theorem that $f$ attains a minimum $\delta > 0$, so that $f(x) \geq \delta > 0$ for all $x \in X$. We claim that $\delta$ is the Lebesgue number of $\prt{A}$.
+    
+    First, notice that for every $x \in X$ we have $d(x, X \setminus A_i) \geq \delta$ for some $A_i$, since $f(x) \geq \delta$ and $f$ is the average of all $d(x, X \setminus A_i)$. Now consider any $B \subset A$ with diameter less than $\delta$. For any $x \in B$ we have $x \in B \subset B_\delta(x) \subset A_i$, where $A_i$ is a set with $d(x, X \setminus A_i) \geq \delta$.
+\end{proof}
+
+\begin{exc}{2}
+    \begin{enumerate}[(a)]
+        \item Let $X$ be a subspace of $\R$ in the finite complement topology and let $\prt{A}$ be an open cover for $X$. Given any nonempty $A \in \prt{A}$, $A$ contains all but finitely many points of $X$. For each $x_i \in X$ not contained in $A$ there is some $A_i \in \prt{A}$ which contains $x_i$, since $\prt{A}$ covers $X$. Then the collection $\set{A, A_1, \dots, A_n}$ where $n$ is the amount of points in $X$ not in $A$ is a finite subcover of $\prt{A}$.
+        
+        \item The subspace $[0, 1] \subset \R$ is not compact when $\R$ is given the countable complement topology. To see this, first fix some bijection $f : \N \to [0, 1] \cap \Q$ and for each $n \in \N$ define $A_n := ([0, 1] \setminus{\Q}) \cup \set{f(n)}$. We claim that $\prt{A} = \set{A_n}_{n \in \N}$ is an open cover for $[0, 1]$.
+        
+        The complement of each set in $\prt{A}$ is clearly countable, so we only need to check that $\prt{A}$ covers $[0, 1]$. Given any $x \in [0, 1]$, we know that $x \in A_1$ if $x \notin \Q$ and if $x \in \Q$ then $x = f(n)$ for some $n \in \N$, so $x \in A_n$.
+        
+        Now assume for contradiction that $\prt{A}$ has a finite subcover $\prt{B} = {A_{i_1}, \dots, A_{i_n}}$ and set $k = \max{i_1, \dots, i_n}$. Then $f(k+1) \notin \bigcup_{j=1}^n A_{i_j}$ by the construction of $\prt{A}$, but this contradicts the assumption that $\prt{B}$ covers $[0, 1]$. 
+        
+    \end{enumerate}
+\end{exc}
+
+\part{Hatcher}
+
+\chapter{The Fundamental Group}
+
+We use the convention that every space is topological and every map is continuous.
+
+\section{Basic Constructions}
+\subsection{Paths and Homotopy}
+
+\begin{definition}
+   A path in $X$ is any map $f : I \to X$. We call $f(0)$ and $f(1)$ the endpoints of $f$. If $f(0)=f(1)$ then $f$ is said to be a loop based at $f(0)$.
+\end{definition}
+
+\begin{definition}
+   A homotopy of paths is a family of paths $f_t : I \to X$ for each $t \in I$, where there are $x_0, x_1 \in X$ such that $f_t(0) = x_0$ and $f_t(1) = x_1$ for all $t \in I$. We also require that the associated map $F : I \times I \to X$ mapping $(s, t) \mapsto f_t(s)$ is continuous. If $f = f_0$ and $g = f_1$, we say that $f$ is path homotopic to $g$, and write $f \simeq g$.
+\end{definition}
+
+\begin{lemma}
+    Path homotopy is an equivalence relation.
+\end{lemma}
+
+\begin{proof}
+    Fix a space $X$ and paths $f, g, h : I \to X$ such that $f(0)=g(0)=h(0)$ and $f(1)=g(1)=h(1)$. Clearly $f \simeq f$ as the family $f_t : I \to S$ mapping $(s, t) \mapsto f_t(s) = f(s)$ is the desired homotopy.
+    
+    Assume now that $f_t : I \to X$ is a homotopy of paths with $f_0 = f$ and $f_1 = g$. Then $(s, t) \mapsto f_{1-t}(s)$ is a homotopy of paths between $g$ and $f$, thus $g \simeq f$.
+    
+    Finally, assume that $f \simeq g$ and $g \simeq h$, where $f_t, g_t$ are the relevant homotopies. Then define the homotopy $h_t : I \to X$ as
+    
+    \begin{equation*}
+        h_t(s) = \begin{cases}
+        f_{2t}(s), & t \in [0, \frac{1}{2}] \\
+        g_{2t-1}(s), & t \in [\frac{1}{2}, 1]
+        \end{cases}.
+    \end{equation*} This is a path homotopy between $f$ and $h$, thus $f \simeq h$.
+\end{proof}
+
+\begin{definition}
+   If $f : I \to X$ is a path, then $[f] = \set{g \in X^I \mid f \simeq g}$ is the homotopy class of $f$.
+\end{definition}
+
+\begin{definition} \label{def_concatpaths}
+   Let $f, g$ be paths where $f(1)=g(0)$. We define the concatenation $f \concat g$ as 
+   \begin{equation*}
+       (f \concat g)(s) = \begin{cases}
+       f(2s), & s \in [0, \frac{1}{2}] \\
+       g(2s-1), & s \in [\frac{1}{2}, 1] \\
+       \end{cases}.
+   \end{equation*} If $f$ and $g$ are loops with the same basepoint, we also define the product $[f][g] = [f \concat g]$.
+\end{definition}
+
+\begin{definition}
+   Let $x_0 \in X$ be arbitrary. We define the constant loop at $x_0$ as the path $\gamma_0 : I \to X$, where $s \mapsto x_0$. Also, if $f: I \to X$ is a loop around $x_0$, we define the inverse $\bar{f}$ of $f$ as the path $\bar{f} : I \to X$ where $s \mapsto f(1-s)$. 
+\end{definition}
+
+\begin{lemma}
+    The product in definition \ref{def_concatpaths} is well defined and forms a group with the set $\pi_1(X, x_0) = \set{[f] \mid f(0) = f(1) = x_0}$, where $x_0 \in X$ is some fixed basepoint. The group $\pi_1(X, x_0)$ is called the fundamental group of $X$ at $x_0$.
+\end{lemma}
+
+\begin{lemma}
+    If $h : I \to X$ is a path with endpoints $x_0$ and $x_1$ respectively, then there is a group isomorphism $\beta_h : \pi_1(X, x_1) \to \pi_1(X, x_0)$. It follows that the fundamental group of a path connected space is unique up to isomorphism.
+\end{lemma}
+
+\begin{definition}
+   A space is simply connected if and only if it is path connected and its fundamental group is trivial.
+\end{definition}
+
+\begin{lemma}
+    In a simply connected space, two paths are path homotopic if and only if they share the same endpoints.
+\end{lemma}
+
+\begin{proof}
+    Assume that $f, g : I \to X$ share the same endpoints, where $X$ is a simply connected space. Then $f \concat \bar{g}$ is a loop at the basepoint $f(0) = x_0$, so $[f \concat \bar{g}] = [\gamma_{x_0}] = [f][\bar{g}]$. Multiplying both sides by $[g]$ we have $[f][\bar{g}][g] = [f] = [g]$, thus $f \simeq g$. The other direction is trivial.
+\end{proof}
+
+\begin{definition}
+   A covering space of $X$ is a space $\widetilde{X}$ and a map $p : \widetilde{X} \to X$ satisfying the following condition. For each $x \in X$ there is an open neighborhood $U$ of $x$ such that $p^{-1}(U)$ is a disjoint union of open sets, each of which gets mapped homeomorphically to $U$ by $p$.
+\end{definition}
+
+\begin{lemma} \label{lem_lift_of_covering}
+    Let $p : \widetilde{X} \to X$ be a covering space and $F : Y \times I \to X$ be a map. Then, given any map $\widetilde{F} : Y \times \set{0} \to X$ lifting $F \restriction{Y \times \set{0}}$, there is a unique map $\widetilde{F} : Y \times I \to X$ lifting $F$ which restricts to the given $\widetilde{F}$ on $Y \times \set{0}$.
+\end{lemma}
+
+For the next two corollaries assume that $p : \tilde{X} \to X$ is a covering space.
+
+\begin{corollary} \label{cor_lift_path}
+    Let $f : I \to X$ be a path with $f(0) = x_0$. For all $\tilde{x}_0 \in p^{-1}\set{x_0}$ there is a unique lift $\tilde{f} : I \to \tilde{X}$ satisfying $\tilde{f}(0) = \tilde{x}_0$.
+\end{corollary}
+
+\begin{proof}
+    Fix some $\tilde{x}_0 \in p^{-1}\set{x_0}$. Consider the function $F : \set{0} \times I \to X$ given by $F(0, s) = f(s)$ and the map $\tilde{F} : \set{0} \times \set{0} \to X$ given by $\tilde{F}(0, 0) = \tilde{x}_0$. By Lemma \ref{lem_lift_of_covering}, there is a unique $\tilde{F} : \set{0} \times I \to \tilde{X}$ lifting $F$ such that $\tilde{F}(0, 0) = \tilde{x}_0$. Then the map $\tilde{f} : I \to \tilde{X}$ given by $\tilde{f}(s) = \tilde{F}(0, s)$ is a lift of $f$ with $\tilde{f}(0) = \tilde{x_0}$.
+    
+    To see that $\tilde{f}$ is unique, let $\tilde{g} : I \to X$ be a lift of $f$ with $\tilde{g}(0) = \tilde{x}_0$. Then the function $\tilde{G} : \set{0} \times I \to \tilde{X}$ given by $\tilde{G}(0, s) = \tilde{g}(s)$ is a lift of $F$ with $\tilde{G}(0) = \tilde{x}_0$. By the uniqueness part of Lemma \ref{lem_lift_of_covering}, we must have $\tilde{F} = \tilde{G}$. It follows that $\tilde{f} = \tilde{g}$.
+\end{proof}
+
+\begin{corollary} \label{cor_lift_homotopy}
+    Let $f_t : I \to X$ be a homotopy of paths starting at $x_0$. For all $\tilde{x}_0 \in p^{-1}\set{x_0}$ there is a unique $\tilde{f}_t : I \to \tilde{X}$ where $\tilde{f}_t(0) = \tilde{x}$ and $p \circ \tilde{f_t} = f_t$ for all $t \in I$.
+\end{corollary}
+
+\begin{proof}
+    Fix some $\tilde{x}_0 \in p^{-1}\set{x_0}$. The result follows from applying Corollary \ref{lem_lift_of_covering} with $Y = I$ in the following way. Consider the map $F : I \times I \to X$ given by $F(t, s) = f_t(s)$. Applying Corollary \ref{cor_lift_path} to the restriction $F \restriction{I \times \set{0}}$, we get a unique lift $\tilde{F} : I \times \set{0} \to \tilde{X}$. Then, Corollary \ref{lem_lift_of_covering} gives a unique lift $\tilde{F} : I \times I \to \tilde{X}$.
+\end{proof}
+
+\begin{theorem}
+    $\pi_1(S^1)$ is isomorphic to $\Z$ under addition.
+\end{theorem}
+
+\begin{proof}
+    For each integer $n \in \Z$ define the path 
+    \begin{align*}
+        \widetilde{\omega}_n : I &\to \R \\
+        s &\mapsto n s.
+    \end{align*} We also define the map 
+    \begin{align*}
+        p : \R &\to S^1 \\ 
+        s &\mapsto (\cos{2 \pi s}, \sin{2 \pi s})
+    \end{align*} and for each $n \in \Z$ we set $\omega_n := p \circ \widetilde{\omega}_n$. Then, we claim that the map $\Phi : \Z \to \pi_1(S, (1, 0))$ given by $\Phi(n) = [\omega_n]$ is a group isomorphism.
+    
+    First, let $\tau_m : \R \to \R$ be given by $\tau_m(s) = s + m$. Notice that $\widetilde{\omega}_m \concat (\tau_m \circ \widetilde{\omega_n})$ is a path beginning at $0$ and ending at $n + m$, thus it is path homotopic to $\R$, since $\R$ is simply connected and the paths have the same endpoints. Then we have $\Phi(m + n) = [\omega_{m + n}] = [p \circ \widetilde{\omega}_{m+n}] = [p \circ (\widetilde{\omega}_m \concat (\tau_m \circ \widetilde{\omega}_n))] = [p \circ \widetilde{\omega}_m][p \circ \tau_m \circ \widetilde{\omega}_n]$. But translations by integers leave $p$ unaffected, so $\Phi(m + n)  = [p \circ \widetilde{\omega}_m] [p \circ \widetilde{\omega}_n] = \Phi(m) \Phi(n)$, thus $\Phi$ is a group homomorphism.
+    
+    Now we have to show that $\Phi$ is bijective and to do that we use the fact that $p : \R \to S^1$ is a covering space. First, let $[f]$ be a homotopy of paths based around $(1, 0)$. By Corollary \ref{cor_lift_path}, there is a unique lift $\tilde{f} : I \to \R$ of $f$ such that $\tilde{f}(0) = 0$ (notice that $0 \in p^{-1}\set{(1, 0)}$). Since $f = p \circ \tilde{f}$, we have $(1, 0)=f(1) = p (\tilde{f}(1))$, so $\tilde{f}(1) \in p^{-1}\set{(1, 0)} = \Z$, so $\tilde{f}(1)$ is some integer $n \in \Z$. Thus, we must have $\tilde{f} \simeq \tilde{\omega}_n$, since $\tilde{f}$ is a path that begins at $0$ and ends in $n$. It follows that $f = p \circ \tilde{f} \simeq p \circ \tilde{\omega}_n = \omega_n$. Thus $[f] = [\omega_n] = \Phi(n)$, and $\Phi$ is surjective.
+    
+    To see that $\Phi$ is injective, assume that $\Phi(m) = \Phi(n)$. This means that there is a homotopy of paths $f_t : I \to S^1$ such that $f_0 = \omega_m = p \circ \tilde{\omega}_m$ and $f_1 = \omega_n = p \circ \tilde{\omega}_n$. By Corollary \ref{cor_lift_homotopy}, there is a unique homotopy of paths $\tilde{f}_t : I \to  \R$ where $\tilde{f}_0(0) = 0$ and $p \circ f_t = \tilde{f}_t$. Notice that $p \circ \tilde{\omega}_m = p \circ \tilde{f}_0$, and the uniqueness part of Corollary \ref{cor_lift_path} guarantees that $\tilde{f}_0 = \tilde{\omega}_m$. Similarly, we have $\tilde{f}_1 = \tilde{\omega}_n$. Then, $\tilde{f}_0(1) = \tilde{\omega}_m(1) = m = \tilde{f}_1(1) = \tilde{\omega}_n(1) = n$. Thus $m = n$, which means $\Phi$ is also injective.
+\end{proof}
 
 \end{document}
