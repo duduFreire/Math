@@ -1,0 +1,328 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{indentfirst}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\setlist{parsep=0pt,listparindent=\parindent}
+
+\newtheorem{theorem}{Theorem}[subsection]
+\newtheorem{lemma}{Lemma}[subsection]
+
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{proposition}{Proposition}[subsection]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[subsection]
+
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Null}{null}
+\DeclareMathOperator{\range}{range}
+
+\makeatletter
+\let\oldabs\abs
+\let\oldceil\ceil 
+\let\oldfloor\floor
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+\def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
+\makeatother
+
+\newcommand{\N}{\mathbf{N}}
+\newcommand{\Z}{\mathbf{Z}}
+\newcommand{\Q}{\mathbf{Q}}
+\newcommand{\I}{\mathbf{I}}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\prt}[1]{\mathcal{#1}}
+\newcommand{\lep}[1][L]{#1et $\epsilon > 0$ be arbitrary}
+\newcommand{\seq}[1]{\left(#1\right)_{n=1}^\infty}
+\newcommand{\LIM}[1]{\text{LIM}_{n \to \infty} #1}
+
+
+\newenvironment{exc}[1]{\noindent\textbf{Exercise \thesubsection.#1.}}{\medskip}
+
+\let\oldlog\log
+\let\oldmax\max
+\let\oldmin\min
+\let\oldsin\sin
+\let\oldcos\cos
+\renewcommand{\log}[1]{\oldlog \left( #1 \right)}
+\renewcommand{\max}[1]{\oldmax \left( #1 \right)}
+\renewcommand{\min}[1]{\oldmin \left( #1 \right)}
+\renewcommand{\sin}[1]{\oldsin \left( #1 \right)}
+\renewcommand{\cos}[1]{\oldcos \left( #1 \right)}
+
+\title{Linear Algebra}
+\author{dudufreirecpp }
+\date{September 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{Vector Spaces}
+
+\subsection{Basics}
+
+\begin{definition}
+    We say that $V$ is a vector space over a field $\mathbf{F}$ if and only if for all $u, v, w \in V$ and all $a, b \in \mathbf{F}$
+    
+    \begin{enumerate}
+        \item $v + u = u + v$;
+        \item $(v + u) + w = v + (u + w)$;
+        \item There is an element $0 \in V$ such that $v + 0 = v$;
+        \item There is an element $x$ such that $v + x = 0$;
+        \item $1v = v$;
+        \item $a(v + w) = a v + a w$ and $(a+b)v = a v + b v$.
+    \end{enumerate}
+    
+\end{definition}
+
+\begin{proposition}
+    Every vector field has an unique additive identity.
+\end{proposition}
+
+\begin{proof}
+    Let $0$ and $0'$ be additive identities in $V$. Then $0 = 0 + 0' = 0' + 0 = 0'$.
+\end{proof}
+
+\begin{proposition}
+    For all $v \in V$ there is an unique $w$ such that $v + w = 0$.
+\end{proposition}
+
+\begin{proof}
+    Choose some arbitrary $v \in V$ and assume that $v + w = v + w' = 0$. Then $w = (v + w') + w = (v + w) + w' = w'$.
+\end{proof}
+
+\begin{definition}
+    For every $v \in V$ we define $-v$ as the unique $w \in V$ such that $v + w = 0$. We also define $v - u$ as $v + (-u)$.
+\end{definition}
+
+\begin{proposition}
+    $-(-v) = v$
+\end{proposition}
+
+\begin{proof}
+    By definition we have $v + (-v) = 0$, so $-v + v = 0$, therefore $v$ is the additive inverse of $-v$, thus $-(-v) = v$.
+\end{proof}
+
+\begin{definition}
+    A subset $U$ of $V$ is called a subspace of $V$ if and only if $U$ is also a vector space.
+\end{definition}
+
+\begin{proposition}
+    A subset $U$ of $V$ is a subspace of $V$ if and only if $U$ is
+    \begin{enumerate}
+        \item Closed under vector addition;
+        \item Closed under scalar multiplication;
+        \item Contains the additive identity of $V$.
+    \end{enumerate}
+\end{proposition}
+
+\section{Finite-Dimensional Vector Spaces}
+
+\subsection{Span and linear independence}
+
+\begin{definition}
+    A list of vectors $v_1, \dots, v_m$ in the vector space $V$ is linearly independent if and only if the following holds: $0 = a_1 v_1 + a_2 v_2 + \dots + a_m v_m \implies a_1 = a_2 = \dots = a_m = 0$. The empty list is also linearly independent. A list that is not linearly independent is called linearly dependent.
+\end{definition}
+
+
+\begin{definition}
+    If $v_1, \dots, v_m$ is a list of vectors in $V$, we define $$\text{span}(v_1, \dots, v_m) := \set{a_1 v_1 + \dots + a_m v_m : a_1, a_2, \dots, a_m \in F}.$$ The span of the empty list is $\set{0}$. If the span of a list is $V$ the list is called spanning.
+\end{definition}
+
+\begin{proposition}
+   If a list is linearly independent then every vector in its span can be written as a linear combination of the vectors in the list in exactly one way.
+\end{proposition}
+
+\begin{proof}
+    We prove by contrapositive, so let $v_1, \dots, v_m$ be a list of vectors and assume that 
+    \begin{align*}
+        v &= a_1 v_1 + \dots + a_m v_m \\
+        v &= b_1 v_1 + \dots + b_m v_m 
+    \end{align*} where $a_j \neq b_j$ for some $j \in {1, \dots, m}$. Subtracting the equations we get 
+    \begin{equation*}
+        0 = (a_1-b_1) v_1 + \dots + (a_j-b_j) v_j + \dots + (a_m-b_m) v_m.
+    \end{equation*} Since $a_j \neq b_j$ we have $a_j - b_j \neq 0$, so not all the coefficients are equal to zero. Therefore the list is linearly dependent.
+\end{proof}
+
+\begin{corollary}
+   A list is linearly independent if and only if none of its vectors are a linear combination of the other.
+\end{corollary}
+
+\begin{definition}
+    A vector space is called finite dimensional if and only if it contains a spanning list.
+\end{definition}
+
+
+\begin{lemma}[Linear Dependence Lemma]
+    Let $v_1, \dots, v_m$ be a linearly dependent list of vectors. Then there is some $j \in {1, \dots, m}$ such that
+    \begin{enumerate}
+        \item $v_j \in \Span(v_1, \dots, v_{j-1})$
+        \item The list $v_1, \dots, v_m$ with the $j$th term removed preserves its original span.
+    \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    Since the list is linearly dependent we have 
+    $a_1 v_1 + \dots + a_m v_m = 0$ where not all of the coefficients are zero. Let $j$ be the largest number where $a_j \neq 0$. Then 
+    $$v_j = \frac{-a_1}{a_j} v_1 + \dots + \frac{-a_{j-1}}{a_j} v_m$$ so $v_j \in \Span(v_1, \dots, v_{j-1})$. The second item also follows easily from the previous equation.
+\end{proof}
+
+\begin{lemma}
+    In a finite-dimensional vector space, every spanning list is at least as big as every linearly independent list.
+\end{lemma}
+
+\begin{proof}
+    Let $u_1, \dots, u_n$ be a linearly independent list and $w_1, \dots, w_m$ be spanning. We need to show that $n \leq m$. We do so in a multi-step process, as follows:
+    
+    Step 1: Since $w_1, \dots, w_m$ spans $V$, the list $u_1, w_1, \dots, w_m$ is linearly dependent. By the Linear Dependence Lemma, we can remove one of the items in this list in such a way that it still spans $V$. That item cannot be $u_1$, otherwise $u_1$ would have to be zero, making $u_1, \dots, u_n$ linearly dependent. Now we have a list $u_1, w_1, \dots, w_m$ with one of the $w$'s removed, thus the list still has length $m$.
+    
+    Step j: We add $u_j$ to the list so that it now looks like $u_1, \dots, u_j, w_1, \dots, w_m$ and has length $n+1$. By the linear dependence lemma we can remove one of the vectors from the list while keeping it spanning. This vector cannot be one of the $u$'s, since that would again imply that $u_1, \dots, u_n$ is linearly dependent. Thus another $w$ is removed.
+    
+    After step $n$ the list looks like $u_1, \dots, u_j$ and the process stops. At every step one of the $w$'s could be removed, so there were at least as many of them as there were $u$'s.
+\end{proof}
+
+\begin{definition}
+    A vector space is finite-dimensional if and only if there is a list of vectors in the space that spans it.
+\end{definition}
+
+\subsection{Bases}
+
+\begin{definition}
+    A list of vectors in $V$ is a basis for $V$ if and only if it is linearly independent and spans $V$.
+\end{definition}
+
+\begin{proposition}
+   A list of vectors in $V$ is a basis if and only if every vector in $V$ can be written as a linearly combination of the vectors in the list in exactly one way.
+\end{proposition}
+
+\begin{proposition}
+   Every spanning list can be reduced to a basis.
+\end{proposition}
+
+\begin{proof}
+    Let $v_1, \dots, v_m$ be a spanning list. If it is linearly independent then we are done, so assume it is not. We can apply the Linearly Dependence lemma repeatedly to remove $v_i$'s until the remaining list is linearly independent while keeping it spanning.
+\end{proof}
+
+\begin{proposition}
+   Every finite dimensional vector space has a basis.
+\end{proposition}
+
+\begin{proof}
+    By definition, the finite dimensional vector space $V$ has a spanning list. This list can then be reduced to a basis.
+\end{proof}
+
+\begin{proposition}
+   Every linearly independent list in a finite dimensional vector space can be extended to a basis.
+\end{proposition}
+
+\begin{proof}
+    Consider the linearly independent list $v_1, \dots, v_m$ in the finite-dimensional vector space $V$. Append to it the spanning list $u_1, \dots, u_n$ so that we now have the list $v_1, \dots, v_m, u_1, \dots, u_n$ and reduce this list to a basis. None of the $v$'s is removed in the process, as is guaranteed by the Linear Dependence Lemma.
+\end{proof}
+
+\subsection{Dimension}
+
+\begin{lemma}
+    Every basis of a finite-dimensional vector space has the same length.
+\end{lemma}
+
+\begin{proof}
+    Let $B_1$ and $B_2$ be bases for $V$. Since $B_1$ is linearly independent and $B_2$ is spanning, the length of $B_1$ is less than or equal to the length of $B_2$. The same argument applies in the other direction, therefore $B_1$ and $B_2$ have the same length.
+\end{proof}
+
+\begin{definition}
+    Let $V$ be a finite-dimensional vector space. We define the dimension $\dim(V)$ of $V$ as the length of any basis of $V$.
+\end{definition}
+
+\begin{proposition}
+   If $v_1, \dots, v_m$ is linearly independent and $\dim(V) = m$ then $v_1, \dots, v_m$ is a basis for $V$.
+\end{proposition}
+
+\begin{proof}
+    Since $v_1, \dots, v_m$ is linearly independent and $V$ is finite dimensional the list can be extended to a basis. However the resulting list has to have length $m$, so the extension is the trivial one and the list is left unchanged, so the original list is a basis.
+\end{proof}
+
+\begin{proposition} \label{prop_dim_of_subspace}
+   If $V$ is finite-dimensional and $U$ is a subspace of $V$ then $U$ is finite-dimensional and $\dim(U) \leq \dim(V)$.
+\end{proposition}
+
+\begin{proof}
+    If $U = \set{0}$ the result follows trivially, so assume otherwise. At step 1, choose some non-zero vector $u_1 \in U$. The list $(u_1)$ is clearly linearly independent. At step $j$, if $\Span(u_1, \dots, u_{j-1}) \neq U$ then add some $u_j \in U \setminus \Span(u_1, \dots, u_{j-1})$ to the end of the list.
+    
+    Since the list being generated is linearly independent in $V$, its length has to be less than or equal to $\dim{V}$, so the process eventually terminates, thus the linearly independent list created spans all of $U$, and is therefore a basis. Clearly its length is less than $\dim(V)$, as wanted.
+    
+\end{proof}
+
+\begin{proposition} \label{prop_subspace_of_same_dimension}
+   If $V$ is finite-dimensional, $U$ is a subspace of $V$ and $\dim{U} = \dim{V}$ then $U = V$.
+\end{proposition}
+
+\begin{proof}
+    Let $u = u_1, \dots, u_n$ be a basis for $U$. This is a linearly dependent list with length $\dim{U} = \dim{V}$, therefore it is a basis for $V$. Thus given any $v \in V$ we have $v \in \Span(u)$, thus $v$ is a linear combination of vectors in $U$, therefore $v \in U$. Since $U \subset V$ and $V \subset U$, we have $U = V$.
+\end{proof}
+
+\begin{proposition}
+   $\dim(V) = 0$ if and only if $V = \set{0}$.
+\end{proposition}
+
+\begin{exc}{1}
+    Proven in Proposition \ref{prop_subspace_of_same_dimension}.
+\end{exc}
+
+\begin{exc}{2}
+     Let $U$ be a subspace of $\R^2$. By Proposition \ref{prop_dim_of_subspace}, $\dim{U} \leq \dim{\R^2} = 2$, so $\dim{U} \in \set{0, 1, 2}$. if $\dim{U} = 2$ then $U = \R^2$ by Proposition \ref{prop_subspace_of_same_dimension}. If $\dim{U} = 0$ then $U = \set{0}$. If $\dim{U} = 1$ then choose any non-zero $(a, b) \in U$. Then the list containing just $(a, b)$ is linearly independent and has length 1, so it is a basis for $U$, therefore $U$ is a line through the origin. 
+\end{exc}
+
+\section{Linear Maps}
+
+\subsection{The Vector Space of Linear Maps}
+
+\begin{definition}
+    A function $T: V \to W$ is a linear map if and only if
+    \begin{enumerate}
+        \item $T(u + v) = T(u) + T(v)$ for all $u, v \in V$;
+        \item $T(\lambda v) = \lambda T(v)$ for all $v \in V$ and all $\lambda \in \mathbf{F}$.
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    $\mathcal{L}(V, W)$ is the set of all linear maps from $V$ to $W$.
+\end{definition}
+
+\subsection{Null Spaces and Ranges}
+
+\begin{definition}
+    Let $T : V \to W$ be a linear map. We define $\Null(T) := \set{v \in V : T (v) = 0}.$ 
+\end{definition}
+
+\begin{proposition}
+   A linear map $T : V \to W$ is injective if and only if $\Null(T) = \set{0}$.
+\end{proposition}
+
+\begin{proof}
+    First assume that $T$ is injective. Notice that $T(0) = T(0 + 0) = T(0) + T(0)$, therefore $T(0) = 0$. By the injectivity of $T$, no other input maps to $0$.
+    
+    For the converse direction assume $\Null(T) = \set{0}$ and that $T(u) = T(v)$. Then $T(u) - T(v) = 0 = T(u-v)$, thus $u-v = 0$ and $u = v$, so $T$ is injective.
+\end{proof}
+
+\begin{theorem} [Fundamental Theorem of Linear Maps]
+    Let $V, W$  be finite-dimensional vector spaces and $T: V \to W$ be a linear map. Then $\dim{V} = \dim{\Null T} + \dim{\range T}$.
+\end{theorem}
+
+
+\end{document}
