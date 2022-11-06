@@ -1,0 +1,387 @@
+\documentclass{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{xparse}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{indentfirst}
+\usepackage[shortlabels]{enumitem}
+\usepackage{microtype}
+\usepackage{esvect}
+\usepackage[colorlinks=true,linkcolor=blue]{hyperref}
+
+\setlist{parsep=0pt,listparindent=\parindent}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\newenvironment{exc}[1]{\noindent\textbf{Exercise \thesection.#1.}}{\medskip}
+
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\makeatletter
+\let\oldabs\abs
+\let\oldceil\ceil 
+\let\oldfloor\floor
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+\def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+\def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
+\makeatother
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\paren}[1]{\left( #1 \right)}
+\newcommand{\set}[1]{\{#1\}}
+\newcommand{\seq}[2][n \in \N]{\left( #2 \right)_{#1}}
+\newcommand{\prt}[1]{\mathcal{#1}}
+\newcommand{\lep}[1][L]{#1et $\epsilon > 0$ be arbitrary}
+\newcommand{\ball}[3]{B_{#1}^{#3}(#2)}
+\newcommand{\closure}[2][3]{%
+{}\mkern#1mu\overline{\mkern-#1mu#2}}
+\newcommand*\concat{\mathbin{\vcenter{\hbox{\rule{.3ex}{.3ex}}}}}
+\newcommand{\powerset}[1]{\mathcal{P}\left (#1\right)}
+\newcommand{\limplies}{\rightarrow}
+\newcommand{\ON}{\mathrm{ON}}
+\newcommand{\CARD}{\mathrm{CARD}}
+\newcommand{\WF}{\mathrm{WF}}
+\newcommand{\lang}{\mathcal{L}}
+\newcommand{\proves}{\vdash}
+\newcommand{\nproves}{\nvdash}
+\newcommand{\nmodels}{\nvDash}
+\newcommand{\liff}{\leftrightarrow}
+\newcommand{\struct}[1]{\mathfrak{#1}}
+\newcommand{\utilde}[1]{\underset{\sim}{#1}}
+\newcommand{\step}[1]{\sigma_{\mathrm{#1}}}
+\newcommand{\submodel}{\preccurlyeq}
+
+\let\oldlog\log
+\let\oldmax\max
+\let\oldmin\min
+\let\oldsin\sin
+\let\oldcos\cos
+\renewcommand{\log}[1]{\oldlog \left( #1 \right)}
+\renewcommand{\max}[1]{\oldmax \left( #1 \right)}
+\renewcommand{\min}[1]{\oldmin \left( #1 \right)}
+\renewcommand{\sin}[1]{\oldsin \left( #1 \right)}
+\renewcommand{\cos}[1]{\oldcos \left( #1 \right)}
+
+\DeclareMathOperator{\type}{type}
+\DeclareMathOperator{\cf}{cf}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\trcl}{trcl}
+
+
+
+\title{Set Theory}
+\author{Eduardo Freire}
+\date{January 2022}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\chapter{Background Material}
+\section{Ordinals}
+
+\begin{definition}
+    A set $\alpha$ is an ordinal if and only if it is transitive and well-ordered by $\in$. $ON$ is the class $\set{\alpha : \alpha \text{ is an ordinal}}$ of all ordinals.
+\end{definition}
+
+\begin{lemma}
+    If $\alpha$ is an ordinal, then $\alpha \notin \alpha$.
+\end{lemma}
+
+\begin{proof}
+    If $\alpha \in \alpha$ than $\in$ is not irreflexive in $\alpha$.
+\end{proof}
+
+\begin{lemma}
+    $ON$ is a transitive class, that is, if $\alpha \in ON$ and $\beta \in \alpha$ then $\beta \in ON$.
+\end{lemma}
+
+\begin{proof}
+    Let $\alpha$ be an ordinal and $\beta \in \alpha$. Then $\beta \subseteq \alpha$, so it is also well-ordered by $\in$. To see that $\beta$ is transitive, consider some $\gamma \in \beta$ and $x \in \gamma$. We have $\gamma \in \alpha$ so $\gamma \subseteq \alpha$, thus $x \in \alpha$. Thus $x, \gamma, \beta \in \alpha$ and $x \in \gamma \in \beta$, so $x \in \alpha$.
+\end{proof}
+
+\begin{lemma}
+    If $\alpha, \beta$ are ordinals than so are $\alpha \cap \beta$ and $\alpha \cup \beta$.
+\end{lemma} \qed
+
+\begin{definition}
+    Let $<$ be the relation $\in$ on the ordinals and for any set $x$ let $S(x) := x \cup \set{x}$.
+\end{definition}
+
+\begin{lemma}
+    For any ordinal $\alpha$, $S(\alpha)$ is also an ordinal.
+\end{lemma} \qed
+
+\begin{lemma}
+    There are no ordinals $\alpha, \beta$ with $\alpha \in \beta$ and $\beta \in \alpha$.
+\end{lemma}
+
+\begin{proof}
+    Let $\alpha$ and $\beta$ be ordinals. Then $\alpha, \beta \in S(\alpha) \cup S(\beta)$ which is also an ordinal. Thus exactly one of $\alpha \in \beta$, $\beta \in \alpha$ or $\alpha = \beta$ must be true.
+\end{proof}
+
+\begin{lemma}
+    If $\alpha$ is an ordinal then $S(\alpha)$ is its successor, which means $\alpha < S(\alpha)$ and $\neg \exists \beta \in ON (\alpha < \beta \land \beta < S(\alpha))$.
+\end{lemma}
+
+\begin{proof}
+    Clearly $\alpha \in S(\alpha) = \alpha \cup \set{\alpha}$. Now assume that $\beta$ is an ordinal and $\alpha < \beta < S(\alpha)$. Since $\beta \in S(\alpha) = \alpha \cup \set{\alpha}$, either $\beta \in \alpha$ or $\beta = \alpha$, but both lead to a contradiction.
+\end{proof}
+
+\setcounter{section}{10}
+\section{Cardinals}
+
+\begin{theorem}
+    For every set $A$ there is a cardinal $\kappa$ such that $\kappa \npreceq A$.
+\end{theorem}
+
+\begin{proof}
+    Consider the set $$W := \set{(X, R) \in \powerset{A} \times \powerset{A \times A} : \text{$R$ well orders $X \times X$}}.$$ Using replacement we can make the ordinal $\beta := \sup\set{\type(X, R) + 1 : (X, R) \in W}$. Now notice that if $\alpha \preceq A$, then $\alpha = \type(X, R)$ for some $(X, R) \in W$, thus $\beta > \alpha$. Thus $\beta \npreceq A$, since otherwise we'd have $\beta < \beta$. Now $\kappa = |\beta| \approx \beta$, so $\kappa$ is a cardinal satisfying $\kappa \npreceq A$.
+\end{proof}
+
+\begin{exc}{29}
+    Let $\alpha$ be such that $\alpha < \beta$. Then there is some $(X, R) \in W$ such that $\type(X, R) + 1 > \alpha$, hence $\type(X, R) \geq \alpha$, thus $\alpha \preceq \type(X, R) \preceq A$. Then if $\alpha \approx \beta$ we'd have $\beta \preceq A$, a contradiction. Thus $\beta$ is a cardinal. The argument above also shows that any cardinal less than $\beta$ injects into $A$, hence $\beta = \aleph(A)$.
+\end{exc}
+
+\begin{lemma}
+    The class of cardinals is a proper class.
+\end{lemma}
+
+\begin{proof}
+    Assume that $C = \set{\kappa : \text{$\kappa$ is a cardinal}}$ is a set. Then $\sup C$ exists and is a cardinal. For every $\kappa \in C$ we have $(\sup C)^+ > \sup C \geq \kappa$. But $(\sup C)^+$ is a cardinal, so $(\sup C)^+ \in C$, which implies $(\sup C)^+ > (\sup C)^+$, a contradiction.
+\end{proof}
+
+\begin{exc}{31}
+    First we show that $\alpha < \beta \implies \aleph_\alpha < \aleph_\beta$. Let $\alpha$ be an arbitrary ordinal and consider the least $\beta$ such that $\aleph_\alpha \geq \aleph_\beta$ and $\alpha < \beta$. $\beta \neq 0$ since $\alpha \in \beta$. Assume that $\beta = \gamma + 1$. Then $\alpha \leq \gamma$, so assume first that $\alpha = \gamma$. In that case, $\beta = \alpha + 1$, so $\aleph_\alpha < (\aleph_\alpha)^+ = \aleph_\beta$. Now assume that $\alpha \in \gamma$. Since $\gamma \in \beta$, we must have $\aleph_\alpha < \aleph_\gamma < (\aleph_\gamma)^+ = \aleph_\beta$.
+    
+    For the last case, assume that $\beta$ is a limit ordinal. Then $\aleph_\beta = \sup\set{\aleph_\gamma : \gamma \in \beta}$. Since $\beta$ is a limit and $\alpha \in \beta$ we also have $\alpha + 1 \in \beta$. Then $\aleph_\beta \geq \aleph_{\alpha + 1} > \aleph_\alpha$, as we wanted to show.
+    
+    Now we show that for every cardinal $\kappa \geq \omega$ there is some $\xi$ such that $\kappa = \aleph_\xi$. Consider the least cardinal $\kappa \geq \omega$ such that $\neg \exists \xi (\kappa = \aleph_\xi)$. We must have $\kappa > \omega$ since $\omega = \aleph_0$. Let $X := \set{\alpha : \alpha \in \CARD\land \omega \leq \alpha < \kappa}$, where $\CARD$ is the class of cardinals. This set is nonempty as $\omega \in X$. Next, consider the function $f : X \to ON$ given by $f(\alpha) = \xi$ where $\xi$ is the unique ordinal such that $\aleph_\xi = \alpha$. Define the ordinal $\xi = \sup\set{f(\alpha) : \alpha \in X}$. If $\xi = 0$, then the only element of $X$ is $\aleph_0$, which implies that $\kappa = \aleph_1$, a contradiction. 
+    
+    Now assume that $\xi = \gamma + 1$. Since $\gamma < \xi$ there must be some $\alpha \in X$ with $f(\alpha) > \gamma$. Then $\xi \geq f(\alpha) > \gamma$, and $\xi$ must be $f(\alpha)$, otherwise we would have $f(\alpha)$ strictly between an ordinal and its successor. Thus $\xi = f(\alpha)$ and $\aleph_\xi = \alpha$. We know that $\kappa > \aleph_\xi$, so assume for contradiction that there is some $\beta$ with $\kappa > \beta > \aleph_\xi$.
+    In that case $\beta = \aleph_\zeta$, so $f(\beta) = \zeta > \xi = f(\alpha)$ contradicting the fact that $\xi$ is a supremum. Thus $\kappa$ is the smallest cardinal greater than $\aleph_\xi$, so $\kappa = \aleph_{\xi + 1}$, a contradiction.
+    
+    For the last case assume that $\xi$ is a limit ordinal. Assume also that $\xi = f(\alpha)$ for some $\alpha \in X$. We claim that $\kappa = \aleph_{\xi + 1}$. Notice that since $\alpha \in X$ we have $\kappa > \alpha = \aleph_\xi$. Now assume for contradiction that there is some $\beta$ with $\kappa > \beta > \aleph_\xi$. Then we have $\beta = \aleph_\zeta$ and $\aleph_\zeta > \aleph_\xi$, so $\zeta > \xi$. But notice that $\beta \in X$ and $f(\beta) = \zeta$, so $\xi \geq f(\beta) = \zeta$, a contradiction. 
+    
+    Now we can assume that $\xi \neq f(\alpha)$ for every $\alpha \in X$. Since $\xi$ is a limit ordinal we have $\aleph_\xi = \sup\set{\aleph_\gamma : \gamma \in \xi}$. We then claim that $\kappa = \aleph_\xi$. First, consider some arbitrary $\gamma \in \xi$. Since $\gamma < \xi$ there must be some $\alpha$ with $f(\alpha) > \gamma$. Then $\aleph_f(\alpha) = \alpha > \aleph_\gamma$. But $\alpha \in X$, which means $\kappa > \alpha \geq \omega$, thus $\kappa > \aleph_\gamma$. Now assume that there is some $\beta$ with $\kappa > \beta$ that is also an upper bound for $\set{\aleph_\gamma : \gamma \in \xi}$. Then we must have $\beta = \aleph_\zeta$ and as $\beta \in X$ we have $\xi \geq \zeta = f(\beta)$. By assumption, we have $\xi \neq f(\beta)$, so $\xi > f(\beta) = \zeta$. As $\xi$ is a limit ordinal, we also have $\zeta + 1 < \xi$. Thus $\beta \geq \aleph_{\zeta + 1} > \aleph_\zeta = \beta$, a contradiction.
+\end{exc}
+
+\begin{lemma}\label{lem_aleph_ge}
+    For every ordinal $\alpha$ we have $\alpha \le \aleph_\alpha$.
+\end{lemma}
+
+\begin{proof}
+    Assume for contradiction that this is not the case and consider the least $\alpha$ satisfying $\aleph_\alpha < \alpha$. Clearly, $\alpha \neq 0$. Assume that there is some $\beta$ with $\alpha = \beta + 1$. Then $\beta < \alpha$, so $\beta \leq \aleph_\beta$. But $\beta + 1 > \aleph_{\beta + 1}$, which means $\beta \geq \aleph_{\beta+1} > \aleph_{\beta}$, a contradiction.
+    
+    Finally, assume that $\alpha$ is a limit ordinal. Then $\aleph_\alpha = \sup\set{\aleph_\gamma : \gamma \in \alpha}$. We will get a contradiction by showing that $\alpha \leq \aleph_\alpha$. It is enough to show that $\alpha \subseteq \aleph_\alpha$, so consider some $\gamma \in \alpha$. Since $\alpha$ is a limit ordinal, we also have $\gamma + 1 \in \alpha$, thus $\aleph_\alpha \geq \aleph_{\gamma + 1} > \aleph_{\gamma} \geq \gamma$, which implies $\gamma \in \aleph_\alpha$, as we wanted.
+\end{proof}
+
+\begin{exc}{33}
+    If $\delta = \aleph_\delta$ then it is easy to see that $\gamma = \delta = \aleph_\gamma$, so assume otherwise. It can then be shown by induction using Lemma \ref{lem_aleph_ge} that $\delta_n < \delta_{n+1}$ for all $n \in \omega$. Notice first that $\gamma$ is a limit ordinal. It is not $0$, since $\delta \in \gamma$, and $\gamma$ is also not a successor, for assume otherwise. Then $\gamma = \alpha + 1$, and since $\alpha \in \gamma$ we must have some $\delta_n$ such that $\delta_n > \alpha$. Then $\alpha + 1 = \gamma \le \delta_n < \delta_{n+1}$, contradicting the fact that $\gamma$ is an upper bound for $\set{\delta_n : n \in \omega}$.
+    
+    Since $\gamma$ is a limit ordinal, we have $\aleph_\gamma = \sup\set{\aleph_\alpha : \alpha \in \gamma}$. We will show that $\aleph_\gamma$ is the least upper bound for $\set{\delta_n : n \in \omega}$, which means $\aleph_\gamma = \gamma$. First, notice that for each $n \in \omega$ we have $\delta_n < \delta_{n+1} \le \gamma$. Hence $\aleph_\gamma \ge \aleph_{\delta_n} = \delta_{n+1} > \delta$, so $\aleph_\gamma$ is an upper bound for $\set{\delta_n : n \in \omega}$.
+    
+    Now assume that $\zeta$ is an upper bound for $\set{\delta_n : n \in \omega}$. If we can show that $\zeta$ is an upper bound for $\set{\aleph_\alpha : \alpha \in \gamma}$ it will follow that $\zeta \ge \aleph_\gamma$, thus $\aleph_\gamma$ is the supremum for $\set{\delta_n : n \in \omega}$, as we wanted to show. So consider the least $\alpha \in \gamma$ such that $\zeta < \aleph_\alpha$. Since $\alpha < \gamma$ there is some $n \in \omega$ such that $\alpha \in \delta_n \in \gamma$. Then $\aleph_\alpha < \aleph_{\delta_n} = \delta_{n+1} \le \zeta$. Thus $\aleph_\alpha \le \zeta$, a contradiction.
+    
+    Now let $\xi$ be an ordinal such that $\xi = \aleph_\xi$. We will show that $\xi \geq \gamma$, when we take $\delta = 0$. It is enough to show that $\xi \geq \delta_n$ for every $n \in \omega$. Clearly $\xi \geq \delta_0 = 0$. Now assume that $\xi \geq \delta_n$. Then $\aleph_\xi \geq \aleph_{\delta_n}$, thus $\aleph_\xi = \xi \geq \delta_{n+1} = \aleph_{\delta_n}$, as we wanted to show.
+\end{exc}
+
+\begin{definition}
+    A function $f : ON \to ON$ is normal if and only if $f(\gamma) = \sup\set{f(\alpha) : \alpha < \gamma}$ whenever $\gamma$ is a limit ordinal and $f(\alpha) < f (\alpha + 1)$ for all ordinals $\alpha$.
+\end{definition}
+
+\begin{lemma}
+    If $f$ is a normal function then $\alpha < \beta \limplies f(\alpha) < f(\beta)$ and $\beta \leq f(\beta)$.
+\end{lemma}
+
+\begin{proof}
+    Both cases are easily proved using transfinite induction on $\beta$.
+\end{proof}
+
+\begin{lemma} \label{lemma:normal_fixed_point}
+    Let $f : ON \to ON$ be a normal function. Define $\delta_f : ON \times \omega \to ON$ recursively as $\delta_f(\alpha, 0) = \alpha$ and $\delta_f(\alpha, n+1) = f(\delta_f(\alpha, n))$. Then, for any ordinal $\alpha$, $\gamma := \sup\set{\delta_f(\alpha, n) : n \in \omega}$ is a fixed point of $f$, meaning that $f (\gamma) = \gamma$.
+\end{lemma}
+
+\begin{proof}
+    We already know that $\gamma \leq f(\gamma)$, so we need to show that $f(\gamma) = \sup\set{f(\beta) : \beta \in \gamma} \leq \gamma$. So consider some $f(\beta)$ with $\beta \in \gamma$. Since $\gamma$ is a least upper bound, there is some $n \in \omega$ with $\delta_f(\alpha, n) > \beta$. Then, $f(\delta_f(\alpha, n)) = \delta_f(\alpha, n+1) > f(\beta)$. Since $\gamma \geq \delta_f(\alpha, n+1)$, we have shown that $\gamma \geq f(\beta)$ for all $\beta < \gamma$, hence $\gamma \geq f(\gamma)$, as we wanted to show.
+\end{proof}
+
+\begin{lemma} \label{lemma:next_fixed_point}
+    If $f : ON \to ON$ is normal, then $\sup\set{\delta_f(0, n) : n \in \omega}$ is the smallest fixed point of $f$. Furthermore, if $\gamma$ is a fixed point of $f$, then $\sup\set{\delta_f(\gamma+1, n) : n \in \omega}$ is the smallest fixed point of $f$ that is larger than $\gamma$.
+\end{lemma}
+
+\begin{proof}
+    By the Lemma~\ref{lemma:normal_fixed_point}, $\gamma_0 := \sup\set{\delta_f(0, n) : n \in \omega}$ is a fixed point of $f$. Now let $\gamma$ be any fixed point of $f$. It suffices to show that $\gamma \geq \delta_f(0, n)$ for all $n \in \omega$. Trivially, $\gamma \geq \delta_f(0, 0) = 0$. Now assume that $\gamma \geq \delta_f(0, n)$. Then $\gamma = f(\gamma) \geq f(\delta_f(0, n)) = \delta_f(0, n+1)$, as we wanted to show.
+    
+    Now let $\gamma$ and $\mu$ be fixed points of $f$ with $\mu > \gamma$. We know that $\zeta := \sup\set{\delta_f(\gamma+1, n) : n \in \omega}$ is also a fixed point of $f$, so we only need to show that $\mu \geq \zeta > \gamma$. Notice that since $\mu > \gamma$, then $\mu \geq \gamma+1 = \delta_f(\gamma+1, 0)$. Now assume that $\mu \geq \delta_f(\gamma+1, n)$. Then $f(\mu) = \mu \geq f(\delta_f(\gamma+1, n)) = \delta_f(\gamma+1, n+1)$. Hence $\mu \geq \zeta$. Also, $\zeta \geq \gamma + 1 > \gamma$, so $\mu \geq \zeta > \gamma$, as we wanted to show.
+\end{proof}
+
+\begin{definition}
+    Given a normal function $f : ON \to ON$, define $G_f : ON \to \mathrm{ON}$ recursively as follows:
+    \begin{align*}
+        &G_f(0) = \sup\set{\delta_f(0, n) : n \in \omega} \\
+        &G_f(\alpha + 1) = \sup\set{\delta_f(G_f(\alpha)+1, n) : n \in \omega} \\
+        &G_f(\gamma) = \sup\set{G_f(\alpha) : \alpha \in \gamma} \text{ when $\gamma$ is a limit ordinal.}
+    \end{align*} The subscript is dropped when $f$ is clear from the context.
+\end{definition}
+
+\begin{lemma} \label{lemma:fixed_of_G}
+    Given a normal function $f$, $G_f(\alpha)$ is the $\alpha\textsuperscript{th}$ fixed point of $f$, meaning that $\type\set{\xi \in G(\alpha) : f(\xi) = \xi} = \alpha$.
+\end{lemma} 
+
+\begin{proof}
+    We use transfinite induction on $\alpha$. By Lemma~\ref{lemma:next_fixed_point}, $G(0)$ is the smallest limit point of $f$, hence $\type\set{\xi \in G(\alpha) : f(\xi) = \xi} = \type(\emptyset) = 0$. If $\alpha = \beta + 1$, then fix the order isomorphism $h : \beta \to \set{\xi \in G(\beta) : f(\xi) = \xi}$. Then $h \cup \set{(\beta, G(\beta))}$ is an isomorphism between $\alpha$ and $\type\set{\xi \in G(\alpha) : f(\xi) = \xi}$ by the same lemma.
+    
+    It suffices to show that for limit $\gamma$, $G(\gamma)$ is a fixed point of $f$, since in that case it will, by the definition of $G$, be the smallest fixed point greater than all $\set{G(\alpha) : \alpha \in \gamma}$. So consider the smallest limit ordinal $\gamma$ such that $G(\gamma)$ is not a fixed point of $f$. We will show that $G(\gamma) \geq f(G(\gamma))$, a contradiction. Notice that $G(\gamma)$ is a limit ordinal, so $f(G(\gamma)) = \sup\set{f(\alpha) : \alpha \in G(\gamma)}$. Now fix some $\alpha \in G(\gamma)$. Since $G(\gamma)$ is a supremum, there is some $\beta \in \gamma$ such that $G(\beta) > \alpha$. Then, $G(\beta) = f(G(\beta)) > f(\alpha)$. Thus $G(\gamma) \geq G(\beta) > f(\alpha)$, meaning that $G(\gamma) \geq f(G(\gamma))$, as we wanted to show.
+\end{proof}
+
+\section{Well Founded Sets}
+    In this section we work over $\mathrm{ZF^-}$, that is, $\mathrm{ZF}$ without the Axiom of Foundation.
+    
+    \begin{definition}[Well Founded Hierarchy]
+        We define the class $\mathrm{WF}$ as $\bigcup \set{R_\alpha : \alpha \in \ON}$ where the $R_\alpha$'s are defined as follows:
+        \begin{align*}
+            R_0 &= \emptyset \\
+            R_{\alpha+1} &= \powerset{R_\alpha} \\
+            R_{\gamma} &= \bigcup_{\alpha < \gamma} R_\alpha,
+        \end{align*} where $\gamma$ is a limit ordinal.
+    \end{definition}
+    
+    Notice that if $X \in \mathrm{WF}$ then the first $\alpha$ for which $X \in \alpha$ is a successor ordinal. This allows for the next definition.
+    
+    \begin{definition}
+        If $X \in \WF$ then we define $\rank(X)$ as $\alpha$, where $\alpha + 1$ is the least ordinal $\beta$ with $X \in R_{\beta}$.
+    \end{definition}
+    
+    \begin{lemma} \label{lem:R_facts}
+    For a given ordinal $\alpha$ and a set $X$, we have the following:
+        \begin{enumerate}
+            \item $R_\alpha$ is a transitive and $\WF$ is transitive;
+            \item $R_\alpha = \set{x \in \WF : \rank(x) < \alpha}$;
+            \item If $X \in \WF$ and $x \in X$ then $x \in \WF$ and $\rank(x) < \rank(X)$;
+            \item $\trcl(X) \in \WF \iff X \in \WF$.
+        \end{enumerate}
+    \end{lemma}
+    
+    \begin{proof}
+        (1) follows easily by induction. For (2) it is clear that $R_\alpha \subseteq \set{x \in \WF : \rank(x) < \alpha}$. For the other direction, let $x$ have rank $\beta < \alpha$. Then $x \in R_{\beta+1}$ and $\beta+1 \leq \alpha$. But it is easy to see that for any $\gamma, \lambda$ with $\gamma \leq \lambda$ we have $R_\gamma \subseteq R_\lambda$, so $R_{\beta+1} \subseteq R_{\alpha}$, which implies that $x \in R_{\alpha}$.
+    
+        (3) follows easily from (2), so we focus on (4). For the forward direction it is enough to show that if $Y \in \WF$ and $X \subseteq Y$ then $X \in \WF$, but this follows immediately from (2). For the other direction, we can use (2) to see that it suffices to show that every element of $\trcl(X)$ has rank less than $\rank(X) = \alpha$. So let $x \in \trcl(X)$. Now recall that $$\trcl(X) = \bigcup\set{{\bigcup}^n X : n \in \N},$$ so $x \in \bigcup^n X$ for some $n \in \N$. We proceed by induction, where the basis case follows from (3). For the inductive step, assume that $x \in \bigcup^{n+1} X$. Then there is some $Y$ with $x \in Y \in \bigcup^n X$. Thus $\rank(x) < \rank(Y) < \alpha$, by (3) and the inductive hypothesis respectively.
+    \end{proof}
+    
+    \begin{lemma} \label{lem:mem_WF_of_mems_WF}
+        Let $X$ be a set and assume that $\forall y \in X (y \in \WF)$. Then $X \in \WF$ and
+        
+        \begin{equation*}
+            \rank(X) = \sup\set{\rank(y) + 1 : y \in X}.
+        \end{equation*}
+    \end{lemma}
+    
+    \begin{proof}
+        Let $\alpha = \sup\set{\rank(y) + 1 : y \in X}$. Then for every $y \in X$ we have $\rank(y) < \alpha$, hence $X \subseteq R_{\alpha}$, by the second item of Lemma \ref{lem:R_facts}. Hence $X \in \powerset{R_\alpha} = R_{\alpha + 1}$, so $X \in \WF$ and $\rank(X) \leq \alpha$. Now assume that $\rank(X) < \alpha$. Then there is some $y \in X$ such that $\rank(X) < \rank(y) + 1$, which implies $\rank(X) \leq \rank(y)$. But now item 3 of Lemma \ref{lem:R_facts} guarantees that $\rank(y) < \rank(X)$, a contradiction.
+    \end{proof}
+    
+    \begin{theorem}
+        $V = \WF$ is equivalent to the Axiom of Foundation.
+    \end{theorem}
+    
+    \begin{proof}
+        A simple induction argument settles the forward direction, using the fact that the power set of any set is well founded, since it contains the empty set.
+        
+        For the other direction, assume the Axiom of Foundation and assume for contradiction that there is some $X \notin \WF$. Then, by Lemma \ref{lem:R_facts}, $\trcl(X) \notin \WF$. Now consider the set $W := \set{x \in \trcl(X) : x \notin \WF}$. If $W = \emptyset$ then every element of $\trcl(X)$ is in $\WF$, thus so is $\trcl(X)$, by Lemma \ref{lem:mem_WF_of_mems_WF}. Otherwise, let $m$ be the $\in$-least element of $W$. Notice that all of the elements of $m$ are in $\trcl(X)$, since $\trcl(X)$ is transitive. But since none of its elements can belong to $W$, they must all be in $\WF$. But in that case Lemma \ref{lem:mem_WF_of_mems_WF} can be applied again to let us conclude that $m \in \WF$, contradicting the fact that $m \in W$.
+    \end{proof}
+    
+    
+
+\setcounter{section}{12}
+\section{Cardinal arithmetic}
+
+\begin{definition}
+    If $\gamma$ is a limit ordinal, then 
+    \begin{equation*}
+        \cf(\gamma) := \oldmin\set{\type(X) : X \subseteq \gamma \land \sup X = \gamma}.
+    \end{equation*} Then, $\gamma$ is regular if and only if $\cf(\gamma) = \gamma$.
+\end{definition}
+
+\begin{theorem} \label{theorem:union_of_lt_regular}
+    If $\theta$ is regular, $|F| < \theta$ and $|S| < \theta$ for all $S \in F$, then $|\bigcup F| < \theta$.
+\end{theorem}
+
+\begin{proof}
+    Let $X := \set{|S| : S \in F}$. Then $X \subseteq \theta$ and $|X| < \theta$, so $\type(X) < \theta$. Since $\theta$ is regular, this implies that $\sup X < \theta$. Now let $\kappa = \max{\sup X, |F|} < \theta$. If $\kappa$ is infinite, then  $|\bigcup F| < \kappa$. If it is finite, then $|\bigcup F|$ is finite. In either case, $|\bigcup F| < \theta$. 
+\end{proof}
+
+\begin{definition}
+    If $\kappa$ is a cardinal, then it its weakly inaccessible if and only if it is regular, $\kappa > \aleph_0$ and $\kappa >\alpha^+$ for all $\alpha < \kappa$. $\kappa$ is strongly inaccessible if and only if it is regular, $\kappa > \aleph_0$ and $\kappa > 2^\alpha$ for all $\alpha < \kappa$.
+\end{definition}
+
+\begin{theorem}
+    If $\kappa$ is a weakly inaccessible cardinal, then it is the $\kappa\textsuperscript{th}$ element of $\set{\aleph_\alpha : \alpha = \aleph_\alpha}$. If $\kappa$ is strongly inaccessible, then it is the $\kappa\textsuperscript{th}$ element of $\set{\beth_\alpha : \alpha = \beth_\alpha}$.
+\end{theorem}
+
+\begin{proof}
+    Notice that $\aleph, \beth : \mathrm{ON} \to \mathrm{ON}$ are normal functions and let $\kappa$ be weakly inaccessible. To see that $\kappa$ is an $\aleph$ fixed point, we show that $\kappa \geq \aleph_\kappa$. We have $\aleph_\kappa = \sup\set{\aleph_\alpha : \alpha \in \kappa}$, so we show by induction that $\kappa > \aleph_\alpha$ for all $\alpha \in \kappa$. Clearly, $\kappa > \aleph_0$. If $\kappa > \aleph_\alpha$ then $\kappa > (\aleph_\alpha)^+ = \aleph_{\alpha + 1}$. If $\alpha$ is a limit ordinal then $\aleph_\alpha = \sup\set{\aleph_\beta : \beta \in \alpha}$. Clearly $\kappa \geq \aleph_\alpha$, and $\kappa \neq \aleph_\alpha$, since otherwise $\set{\aleph_\beta : \beta \in \alpha}$ would be an unbounded subset of $\kappa$ with order type $\alpha$ which is less than $\kappa$, contradicting the assumption that $\kappa$ is regular.
+    
+    Now we have to show that $\kappa$ is the $\kappa\textsuperscript{th}$ fixed point of $\aleph$. By Lemma~\ref{lemma:fixed_of_G}, this is equivalent to showing that $G_\aleph(\kappa) = \kappa$. Since $G$ is normal, we already have $\kappa \leq G(\kappa)$, so we show that $\kappa \geq G(\kappa)$. Notice that if $\gamma$ is not a limit ordinal, then $\cf (G(\gamma)) = \omega$, hence $\kappa \neq G(\gamma)$. Then, $\kappa \geq G(0)$ as $G(0)$ is the smallest $\aleph$ fixed point, so $\kappa > G(0)$. If $\kappa > G(\alpha)$, then $\kappa \geq G(\alpha + 1)$, since $G(\alpha + 1)$ is the smallest fixed point greater than $G(\alpha)$. Since $\alpha + 1$ is a successor, $\kappa > G(\alpha + 1)$.
+    
+    Now let $\gamma$ be the smallest ordinal in $\kappa$ such that $\kappa < G(\gamma)$. By the argument above, $\gamma$ must be a limit ordinal. Then $G(\gamma) = \sup\set{G(\alpha) : \alpha < \gamma}$, hence $\kappa \geq G(\gamma)$, a contradiction. Hence $\kappa \geq \sup\set{G(\alpha) : \alpha \in \kappa} = G(\kappa)$, as we wanted to show.
+    
+    When $\kappa$ is strongly inaccessible, replace $\aleph$ by $\beth$ and $\alpha^+$ with $2^\alpha$ in the proof above.
+\end{proof}
+
+\begin{lemma}
+    If $\kappa$ is a cardinal such that $\beth_\kappa = \kappa$, then $V_\kappa = H(\kappa)$.
+\end{lemma}
+
+\begin{proof}
+    For any cardinal $\lambda$ it is already the case that $H(\lambda) \subseteq V_\lambda$, so we show only that $V_\kappa \subseteq H(\kappa)$. So consider some $x \in V_\kappa$. Since $\kappa$ is a limit ordinal we have some $\alpha \in \kappa$ with $x \in V_\alpha$. Then $\operatorname{trcl}(x) \in V_\alpha$, so $\operatorname{trcl}(x) \subseteq V_\alpha$. Then $\abs{\operatorname{trcl}(x)} \leq \abs{V_\alpha} \leq \beth_\alpha$. Since $\alpha < \kappa$, $\beth_\alpha < \beth_\kappa = \kappa$, hence $\abs{\operatorname{trcl}(x)} < \kappa$, so $x \in H(\kappa)$.
+\end{proof}
+
+\chapter{Model Theory}
+\setcounter{section}{15}
+\section{Elementary Submodels}
+
+\begin{lemma}{(Tarski-Vaught criterion)}
+Let $\struct{A}, \struct{B}$ be $\lang$-structures with $\struct{A} \subseteq \struct{B}$. The following are equivalent:
+
+\begin{enumerate}
+    \item $\struct{A} \submodel \struct{B}$.
+    \item For all existential formulas $\phi(\vec{x}) = \exists y \psi(\vec{x}, y)$ with $n$ free variables and all $\vec{a} \in A^n$, if $\struct{B} \models \phi[\vec{a}]$ then $\struct{B} \models \psi[\vec{a}, b]$ for some $b \in A$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+    (1) $\limplies$ (2): Let $\exists y \psi(\vec{x}, y)$ be an existential formula, $\vec{a} \in A^n$ and assume $\struct{B} \models \exists y \psi(\vec{x}, y)[\vec{a}]$. Then $\struct{A} \models \exists y \psi(\vec{x}, y)[\vec{a}]$ by $\struct{A} \submodel \struct{B}$, so there is some $b \in A$ with $\struct{A} \models psi(\vec{x}, y)[\vec{a}, b]$. Then $\struct{A} \models \psi(\vec{x}, y)[\vec{a}, b]$, by $\struct{A} \submodel \struct{B}$.
+    
+    (2) $\limplies$ (1): Inducting on the length of $\phi$, we only need to check the cases where $\phi$ begins with a quantifier. If $\phi = \exists y \psi(\vec{x}, y)$, then 
+    \begin{equation*}
+        \struct{A} \models \phi[\vec{a}] \iff \exists b \in A (\struct{A} \models \psi(\vec{x}, y)[\vec{a}, b]) \iff \struct{B} \models \phi[\vec{a}].
+    \end{equation*}
+\end{proof}
+
+\begin{theorem} ({Downward Löwenheim-Skolem-Tarski Theorem})
+    Let $\struct{B}$ be an infinite $\lang$-structure, and let $\kappa$ be a cardinal with $\max{\aleph_0, |\lang|} \leq \kappa \leq |B|$. Fix $S \subseteq B$ with $|S| \leq \kappa$. Then there is an $\lang$-structure $\struct{A} \submodel \struct{B}$ such that $|A| = \kappa$ and $S \subseteq A$.
+\end{theorem}
+
+\end{document}

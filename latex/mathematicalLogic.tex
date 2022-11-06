@@ -49,7 +49,7 @@
 
 \AtBeginDocument{\providecommand*\colonequiv{\vcentcolon\mspace{-1.2mu}\equiv}}
 
-\newcommand{\N}{\mathbf{N}}
+\newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbf{Z}}
 \newcommand{\Q}{\mathbf{Q}}
 \newcommand{\I}{\mathbf{I}}
@@ -95,6 +95,20 @@
 \begin{document}
 
 \maketitle
+Nesse exercício consideraremos apenas interpretações sobre uma linguagem que
+contêm apenas um símbolo de relação binária $p$ e nenhum símbolo de função. Também
+não especificaremos as funções de designação, já que $\phi_1, \phi_2$ e $\phi_3$ não possuem variáveis livres, logo seus significados semânticos não dependem das funções de designação.
+
+A interpretação $\struct{A}_r$ cujo domínio é $\N$ e $p^{\struct{A}_r} = \emptyset$ vacuosamente satisfaz $\phi_2$ e $\phi_3$.
+Contudo, $\struct{A}_r$ não satisfaz $\phi_1$, já que $(0, 0) \notin p^{\struct{A}_r}$, por exemplo.
+
+Defina agora a interpretação $\struct{A}_s$ cujo domínio é $\N$ e $p^{\struct{A}_s}$ é a relação $\leq$ usual nos naturais. A relação $\leq$ é reflexiva e transitiva, contudo não é simétrica, já que por exemplo $4 \leq 5$ mas $\neg (5 \leq 4)$. Ou seja, temos $(4, 5) \in p^{\struct{A}_s}$ mas $(5, 4) \notin p^{\struct{A}_s}$. Dessa forma, $\struct{A}_s$ satisfaz $\phi_1$ e $\phi_3$, mas não $\phi_2$.
+
+Por fim, considere a relação $\struct{A}_t$ cujo domínio é $\set{1, 2, 3}$ e $p^{\struct{A}_t}$ é 
+\begin{equation*}
+    \set{(1, 1), (2, 2), (3, 3), (0, 1), (1, 2), (1, 0), (2, 1)}.
+\end{equation*} Claramente $p^{\struct{A}_t}$ é reflexiva e simétrica. Contudo, $p^{\struct{A}_t}$ não é transitiva, já que $(0, 1) \in p^{\struct{A}_t}$, $(1, 2) \in p^{\struct{A}_t}$ mas $(0, 2) \notin p^{\struct{A}_t}$. Dessa forma, $\struct{A}_t$ satisfaz $\phi_1$ e $\phi_2$, mas não $\phi_3$.
+
 \section{Propositional Logic}
 \begin{definition}
     Let $Vars_P := \set{P_n: n \in \N}$  be the set of the symbols $P_1, P_2, \dots $, each called a propositional variable. We define the \textbf{language of propositional logic} as $\lang_P := Vars_P \cup \set{\limplies, \neg}$.
@@ -369,7 +383,7 @@ The following lemma has an easy proof and will be used implicitly several times.
    \end{equation*}
     We argue by induction that each $\Sigma_n$ is consistent. The base case follows from the assumption that $\Delta$ is consistent, so assume that $\Sigma_n$ is consistent. If $\Sigma_n \nproves \phi_n$, $\Sigma_{n+1} = \Sigma_n \cup \set{\neg \phi_n}$ is consistent by Lemma \ref{lem_addStaysConsistent}. The other case is $\Sigma \proves \phi_n$, but then $\Sigma_{n+1} = \Sigma_n \cup \set{\phi_n}$ is clearly consistent.
     
-    Define $\Sigma := \bigcup_{n \in \N} \Sigma_n$. Clearly $\Sigma_0 = \Delta \subseteq \Sigma$. Assume for contradiction that $\Sigma$ is inconsistent and fix some deduction $D$ of $\bot$ from $\Sigma$. Since $D$ is finite, there are only finitely many assumptions used (i.e elements of $\Sigma$) used in $D$, so that there is some $N \in \N$ such that $\Sigma_N$ includes all of those assumptions. Thus, $\Sigma_N \proves \bot$. But we have already shown that $\Sigma_N$ must be consistent, so we have our contradiction.
+    Define $\Sigma := \bigcup_{n \in \N} \Sigma_n$. Clearly $\Sigma_0 = \Delta \subseteq \Sigma$. Assume for contradiction that $\Sigma$ is inconsistent and fix some deduction $D$ of $\bot$ from $\Sigma$. Since $D$ is finite, there are only finitely many assumptions (i.e elements of $\Sigma$) used in $D$, so that there is some $N \in \N$ such that $\Sigma_N$ includes all of those assumptions. Thus, $\Sigma_N \proves \bot$. But we have already shown that $\Sigma_N$ must be consistent, so we have our contradiction.
    
    Also, given any p-formula $\psi$, there is some natural $n$ such that $\phi_n \is \psi$, so one of $\psi$ or $\neg \psi$ are in $\Sigma$. Since $\Sigma$ is consistent, it cannot be the case that both $\psi, \neg \psi \in \Sigma$, so $\Sigma$ is complete. By Lemma \ref{lemma_uniqueAssignment}, there is an assignment $s$ that satisfies $\Sigma$. Since $\Delta \subseteq \Sigma$, $s$ also satisfies $\Delta$, thus $\Delta$ is satisfiable and we are done.
    
@@ -482,10 +496,8 @@ Throughout this section $\lang$ will denote an arbitrary first-order language.
 \end{theorem}
 
 \begin{proof}
-   Let $\struct{A}$ and $\struct{B}$ be isomorphic $\lang$-structures and assume that $\struct{A} \models \phi$. Let $s: Vars \to B$ be an arbitrary assignment function into $\struct{B}$. By Lemma \ref{lem_isoEquiv}, we have $\struct{B} \models \phi[s] \iff \struct{A} \models \phi[f^{-1} \circ s]$, where $f:A \to B$ is an isomorphism. Since $A \models \phi[s']$ for any assignment $s'$, the result follows. The converse follows similarly.
+   Let $\struct{A}$ and $\struct{B}$ be isomorphic $\lang$-structures and assume that $\struct{A} \models \phi$. Let $s: Vars \to B$ be an arbitrary assignment function into $\struct{B}$. By Lemma \ref{lem_isoEquiv}, we have $\struct{B} \models \phi[s] \iff \struct{A} \models \phi[f^{-1} \circ s]$, where $f:A \to B$ is an isomorphism. Since $\struct{A} \models \phi[s']$ for any assignment $s'$, the result follows. The converse follows similarly.
 \end{proof}
-
-
 
 \section{Computability Theory}
 
@@ -528,6 +540,7 @@ Throughout this section $\lang$ will denote an arbitrary first-order language.
     
     It is easy to see that $A(1, x) = 2x + 2$ and $A(2, x) = 2^{x+2}-2 > 2^x$ by induction.
 \end{enumerate}
+
 
 \section{Turing Machines}
 

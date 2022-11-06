@@ -45,6 +45,7 @@
 \newcommand{\Q}{\mathbb{Q}}
 \newcommand{\I}{\mathbb{I}}
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
 \newcommand{\paren}[1]{\left( #1 \right)}
 \newcommand{\set}[1]{\{#1\}}
 \newcommand{\seq}[2][n \in \N]{\left( #2 \right)_{#1}}
@@ -76,7 +77,7 @@
 \maketitle
 \tableofcontents
 
-\part{Munkres}
+\part{General Topology}
 \chapter{Metric Spaces}
 \section{Basics}
 
@@ -194,7 +195,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     
     Next, assume that $a,b,x,y \in \prt{C}(X)$ and $a \sim x$ and $b \sim y$. In order to show that $\Tilde{d}([a], [b]) = \Tilde{d}([x], [y])$ we will show that the Cauchy sequences of reals $(d(x_n, y_n))$ and $(d(a_n, b_n))$ are equivalent. To do that, let $\epsilon > 0$ be arbitrary.
     
-    Using the fact that $x$ is equivalent to $a$ and $y$ is equivalent $b$, pick $N \in \N$ such that $d(x_n, a_n) < \epsilon/2$ and $d(y_n, b_n) < \epsilon/2$ for all $n \geq N$. Now fix some $n \geq N$ and, similarly to before, we have $\abs{d(x_n, y_n)-d(a_n, y_n)} \leq d(x_n, a_n) < \epsilon/2$ and $\abs{d(a_n, y_n), d(a_n, b_n)} \leq d(y_n, b_n) < \epsilon/2$, thus
+    Using the fact that $x$ is equivalent to $a$ and $y$ is equivalent $b$, pick $N \in \N$ such that $d(x_n, a_n) < \epsilon/2$ and $d(y_n, b_n) < \epsilon/2$ for all $n \geq N$. Now fix some $n \geq N$ and, similarly to before, we have $\abs{d(x_n, y_n)-d(a_n, y_n)} \leq d(x_n, a_n) < \epsilon/2$ and $\abs{d(a_n, y_n) - d(a_n, b_n)} \leq d(y_n, b_n) < \epsilon/2$, thus
     \begin{align*}
         &\abs{d(x_n, y_n) - d(a_n, b_n)} \leq 
         \abs{d(x_n, y_n) - d(a_n, y_n)} + 
@@ -575,7 +576,7 @@ Throughout this section $(X, d)$ will be an arbitrary metric space.
     \end{enumerate}
 \end{exc}
 
-\part{Hatcher}
+\part{Algebraic Topology}
 
 \chapter{The Fundamental Group}
 
@@ -650,53 +651,110 @@ We use the convention that every space is topological and every map is continuou
 \end{proof}
 
 \begin{definition}
-   A covering space of $X$ is a space $\widetilde{X}$ and a map $p : \widetilde{X} \to X$ satisfying the following condition. For each $x \in X$ there is an open neighborhood $U$ of $x$ such that $p^{-1}(U)$ is a disjoint union of open sets, each of which gets mapped homeomorphically to $U$ by $p$.
+    Let $p : E \to B$ be a surjective map. We say that an open subset $U \subset B$ is evenly covered by $p$ if and only if $p^{-1}(U)$ is a disjoint union of open sets $\set{V_\alpha}$, such that the restriction of $p$ to each $V_\alpha$ is a homeomorphism onto $U$. If every $x \in B$ has an open neighborhood that is evenly covered by $p$, we say that $p$ is a covering map, and $E$ is a covering space of $B$.
 \end{definition}
 
-\begin{lemma} \label{lem_lift_of_covering}
-    Let $p : \widetilde{X} \to X$ be a covering space and $F : Y \times I \to X$ be a map. Then, given any map $\widetilde{F} : Y \times \set{0} \to X$ lifting $F \restriction{Y \times \set{0}}$, there is a unique map $\widetilde{F} : Y \times I \to X$ lifting $F$ which restricts to the given $\widetilde{F}$ on $Y \times \set{0}$.
+\begin{definition}
+    Let $p : E \to B$ be a map and $f : I \to B$ be a path. If $\tilde{f} : I \to  E$ is such that $f = p \circ \tilde{f}$, we say that $\tilde{f}$ is a lifting of $f$.
+\end{definition}
+
+\begin{lemma} \label{lem_lift_path}
+    Let $p : E \to B$ be a covering map. For all paths $f : I \to B$ beginning at $b_0$ and all $e_0 \in p^{-1}(b_0)$, there is a unique path $\tilde{f} : I \to E$ that begins at $e_0$ and lifts $f$.
 \end{lemma}
 
-For the next two corollaries assume that $p : \tilde{X} \to X$ is a covering space.
-
-\begin{corollary} \label{cor_lift_path}
-    Let $f : I \to X$ be a path with $f(0) = x_0$. For all $\tilde{x}_0 \in p^{-1}\set{x_0}$ there is a unique lift $\tilde{f} : I \to \tilde{X}$ satisfying $\tilde{f}(0) = \tilde{x}_0$.
-\end{corollary}
-
 \begin{proof}
-    Fix some $\tilde{x}_0 \in p^{-1}\set{x_0}$. Consider the function $F : \set{0} \times I \to X$ given by $F(0, s) = f(s)$ and the map $\tilde{F} : \set{0} \times \set{0} \to X$ given by $\tilde{F}(0, 0) = \tilde{x}_0$. By Lemma \ref{lem_lift_of_covering}, there is a unique $\tilde{F} : \set{0} \times I \to \tilde{X}$ lifting $F$ such that $\tilde{F}(0, 0) = \tilde{x}_0$. Then the map $\tilde{f} : I \to \tilde{X}$ given by $\tilde{f}(s) = \tilde{F}(0, s)$ is a lift of $f$ with $\tilde{f}(0) = \tilde{x_0}$.
+    Let $f : I \to B$ be a path beginning at $b_0$ and fix some $e_0 \in p^{-1}(b_0)$. Choose some open covering of $B$ by sets $U$ that are evenly covered by $p$. Using the Lebesgue number lemma, we can find some subdivision $s_0, \dots, s_n$ of $[0, 1]$ such that for each $[s_i, s_{i+1}]$ we have $f([s_i, s_{i+1}]) \subset U$ for some $U$ in the covering we fixed.
     
-    To see that $\tilde{f}$ is unique, let $\tilde{g} : I \to X$ be a lift of $f$ with $\tilde{g}(0) = \tilde{x}_0$. Then the function $\tilde{G} : \set{0} \times I \to \tilde{X}$ given by $\tilde{G}(0, s) = \tilde{g}(s)$ is a lift of $F$ with $\tilde{G}(0) = \tilde{x}_0$. By the uniqueness part of Lemma \ref{lem_lift_of_covering}, we must have $\tilde{F} = \tilde{G}$. It follows that $\tilde{f} = \tilde{g}$.
+    We define $\tilde{f} : I \to E$ inductively. First, set $\tilde{f}(0) = e_0$. Now assume that $\tilde{f}$ is defined for all $s$ with $0 \leq s \leq s_i$. We know that $f([s_i, s_{i+1}])$ lies on an an open $U$, where its preimage $p^{-1}(U)$ is a disjoint union of open sets $\set{V_\alpha}$ that are mapped homeomorphically onto $U$ by $p$. Then $\tilde{f}(s_i)$ is in one of those sets, say $V_0$. Then, for $s \in [s_i, s_{i+1}]$, we define $\tilde{f}(s) = (p\restriction{V_0})^{-1}(f(s))$. By the pasting lemma, $\tilde{f}$ is continuous.
+    
+    To see that $\tilde{f}$ is unique, let $\tilde{g} : I \to E$ be another lift of $f$ starting at $e_0$. We use induction again to show that $\tilde{f} = \tilde{g}$. We have $\tilde{f}(0) = e_0 = \tilde{g}(0)$, so assume that $\tilde{f} = \tilde{g}$ on the interval $[0, s_i]$. Let $V_0$ be as in the preceding paragraph. Since $\tilde{g}$ it must carry $[s_i, s_{i+1}]$ to $p^{-1}(U) = \bigcup_\alpha V_\alpha$. So $\tilde{f}(s_i) = \tilde{g}(s_i) \in V_\alpha$, but the $V_\alpha$ are disjoint, thus $\tilde{g}(s_i) \in V_0$. Since $\tilde{g}([s_i, s_{i+1}])$ is connected, we must also have $\tilde{g}([s_i, s_{i+1}]) \subset V_0$. Then, given any $s \in [s_i, s_{i+1}]$, we must have $f(s) = p(\tilde{g}(s))$, so $\tilde{g}(s)$ must be a point in $V_0$ that is also in the preimage of $f(s)$, but there is only one such point, namely $\tilde{f}(s)$.
 \end{proof}
 
-\begin{corollary} \label{cor_lift_homotopy}
-    Let $f_t : I \to X$ be a homotopy of paths starting at $x_0$. For all $\tilde{x}_0 \in p^{-1}\set{x_0}$ there is a unique $\tilde{f}_t : I \to \tilde{X}$ where $\tilde{f}_t(0) = \tilde{x}$ and $p \circ \tilde{f_t} = f_t$ for all $t \in I$.
-\end{corollary}
+\begin{lemma} \label{lem_lift_homotopy}
+    Let $p : E \to B$ be a covering map and $F : I \times I \to B$ be a continuous map with $F(0, 0) = b_0$. For each $e_0 \in p^{-1}(b_0)$ there is a unique continuous lifting $\tilde{F} : I \times I \to E$ of $F$ such that $\tilde{F}(0, 0) = e_0$. Furthermore, if $F$ is a path homotopy, then so is $\tilde{F}$.
+\end{lemma}
 
 \begin{proof}
-    Fix some $\tilde{x}_0 \in p^{-1}\set{x_0}$. The result follows from applying Corollary \ref{lem_lift_of_covering} with $Y = I$ in the following way. Consider the map $F : I \times I \to X$ given by $F(t, s) = f_t(s)$. Applying Corollary \ref{cor_lift_path} to the restriction $F \restriction{I \times \set{0}}$, we get a unique lift $\tilde{F} : I \times \set{0} \to \tilde{X}$. Then, Corollary \ref{lem_lift_of_covering} gives a unique lift $\tilde{F} : I \times I \to \tilde{X}$.
+    We can uniquely construct $\tilde{F}$ analogously to the construction in Lemma \ref{lem_lift_path}, instead dividing the rectangle $I \times I$ into small rectangles and defining $\tilde{F}$ inductively on these rectangles.
+    
+    Now assume that $F$ is a path homotopy. Then $F$ maps $0 \times I$ to the point $b_0$, so we must have $\tilde{F}(0 \times I) = p^{-1}(\set{b_0})$. But $p^{-1}(\set{b_0})$ has the discrete topology, so its subspaces that contain two points are disconnected. But $\tilde{F}$ is continuous and $0 \times I$ is connected, so $\tilde{F}(0 \times I)$ is connected, hence it is a one point set. Similarly, $\tilde{F}(1 \times I)$ is also a one point set, so $\tilde{F}$ is a path homotopy.
 \end{proof}
 
-\begin{theorem}
-    $\pi_1(S^1)$ is isomorphic to $\Z$ under addition.
+\begin{theorem} \label{thm_hom_lift_hom}
+    Let $p : E \to B$ be a covering map and $f, g : I \to B$ be paths beginning at $b_0$ that are path homotopic. It follows that any liftings $\tilde{f}, \tilde{g} : I \to E$ which begin at $e_0 \in p^{-1}(b_0)$ are path homotopic.
 \end{theorem}
 
 \begin{proof}
-    For each integer $n \in \Z$ define the path 
+    Let $F : I \times I \to B$ be a path homotopy between $f$ and $g$. The lifting $\tilde{F} : I \times I \to E$ beginning at $e_0$ is also a path homotopy. Then $\tilde{F}\restriction{I \times 0}$ is a lifting of $f$ beginning at $e_0$, so $\tilde{F}\restriction{I \times 0} = \tilde{f}$, by the uniqueness part of Lemma \ref{lem_lift_path}. Similarly, $\tilde{F}\restriction{I \times 1} = \tilde{g}$. Thus $\tilde{F}$ is a path homotopy between $\tilde{f}$ and $\tilde{g}$. 
+\end{proof}
+
+\begin{definition}
+    Let $p : E \to B$ be a covering map. Fix some $b_0 \in B$ and $e_0 \in p^{-1}(\set{b_0})$. Let $\Phi : \pi_1(B, b_0) \to p^{-1}(\set{b_0})$ be the mapping taking $[f]$ to $\tilde{f}(1)$, where $\tilde{f} : I \to E$ is the unique lift of $f$ starting at $e_0$. This map is well defined by Theorem \ref{thm_hom_lift_hom}, and we call $\Phi$ a lifting correspondence between $\pi_1(B, b_0)$.
+\end{definition}
+
+\begin{lemma}
+    Let $p : E \to B$ be a covering map and $p(e_0) = b_0$. If $E$ is path connected, then the lifting correspondence $\Phi : \pi_1(B, b_0) \to p^{-1}(\set{b_0})$ is surjective, and if $E$ is simply connected then $\Phi$ is bijective.
+\end{lemma}
+
+\begin{proof}
+    Assume first that $E$ is path connected and fix some $e \in p^{-1}(\set{b_0})$. Let $\tilde{f} : I \to E$ be a path connecting $e_0 \to e$ and define $f = p \circ \tilde{f}$. Then $\tilde{f}$ is a lifting of $f$, which is a path beginning at $b_0$. It follows that $\Phi([f]) = \tilde{f}(1) = e$, so $\Phi$ is surjective.
+    
+    Now assume that $E$ is simply connected and that $\Phi([f]) = \Phi([g])$. Let $\tilde{f}, \tilde{g} : I \to E$ be the lifts of $f$ and $g$ which begin at $e_0$. It follows that $\tilde{f}(1) = \tilde{g}(1)$, hence $\tilde{f}$ and $\tilde{g}$ share the same endpoints and thus are homotopic. Let $\tilde{F} : I \times I \to E$ be a homotopy between them. The map $F = p \circ \tilde{F}$ is a homotopy between $f$ and $g$, so $[f] = [g]$, and $\Phi$ is injective.
+\end{proof}
+
+\begin{lemma}
+    The function 
     \begin{align*}
-        \widetilde{\omega}_n : I &\to \R \\
-        s &\mapsto n s.
-    \end{align*} We also define the map 
-    \begin{align*}
-        p : \R &\to S^1 \\ 
+        p : \R &\to S^1 \\
         s &\mapsto (\cos{2 \pi s}, \sin{2 \pi s})
-    \end{align*} and for each $n \in \Z$ we set $\omega_n := p \circ \widetilde{\omega}_n$. Then, we claim that the map $\Phi : \Z \to \pi_1(S, (1, 0))$ given by $\Phi(n) = [\omega_n]$ is a group isomorphism.
+    \end{align*} is a covering map.
+\end{lemma}
+
+\begin{theorem}
+    $\pi_1(S^1)$ is isomorphic to the additive group $\Z$.
+\end{theorem}
+
+\begin{proof}
+    Let $p$ be the covering map given in the previous lemma. Let $\Phi : \pi_1(S^1, (1, 0)) \to p^{-1}(\set{0})$ be a lifting correspondence, and notice that $p^{-1}(\set{0}) = \Z$. We know that $\R$ is simply connected which implies that $\Phi$ is bijective, hence we only need to show that $\Phi$ is a group homomorphism.
     
-    First, let $\tau_m : \R \to \R$ be given by $\tau_m(s) = s + m$. Notice that $\widetilde{\omega}_m \concat (\tau_m \circ \widetilde{\omega_n})$ is a path beginning at $0$ and ending at $n + m$, thus it is path homotopic to $\R$, since $\R$ is simply connected and the paths have the same endpoints. Then we have $\Phi(m + n) = [\omega_{m + n}] = [p \circ \widetilde{\omega}_{m+n}] = [p \circ (\widetilde{\omega}_m \concat (\tau_m \circ \widetilde{\omega}_n))] = [p \circ \widetilde{\omega}_m][p \circ \tau_m \circ \widetilde{\omega}_n]$. But translations by integers leave $p$ unaffected, so $\Phi(m + n)  = [p \circ \widetilde{\omega}_m] [p \circ \widetilde{\omega}_n] = \Phi(m) \Phi(n)$, thus $\Phi$ is a group homomorphism.
+    Choose arbitrary loops $[f], [g] \in \pi_1(S^1, (1,0))$ and let $\tilde{f}, \tilde{g}$ be the liftings of $f$ and $g$ beginning at $0$. Notice that the right endpoints $\tilde{f}(1) = n$ and $\tilde{g}(1) = m$ are integers. The function $\tilde{g}' : I \to \R$ given by $\tilde{g}'(s) = g(s) + n$ is a lift of $g$ beginning at $n$, since $p$ has period $1$. Then we can concatenate $\tilde{f}$ and $\tilde{g}'$, and $\tilde{f} \concat \tilde{g}'$ is the unique lift of $f \concat g$ which begins at $0$. Now using the fact that $(\tilde{f} \concat \tilde{g}')(1) = n + m$, we have 
+    \begin{equation*}
+        \Phi([f] \concat [g]) = \Phi([f \concat g]) = (\tilde{f} \concat \tilde{g}')(1) = n + m = \Phi([f]) + \Phi([g]).
+    \end{equation*} Since $\Phi$ is a bijective homomorphism, it is also a group isomorphism between $\pi_1(S^1)$ and the additive group of the integers.
+\end{proof}
+
+\begin{remark}
+     For each $n \in \Z$, let $\tilde{\omega}_n : I \to \R$ be given by $\tilde{\omega}_n(s) = n s$. Then $\tilde{\omega}_n$ is a path from $0$ to $n$. Define also $\omega_n = p \circ \tilde{\omega}_n$. We have $\Phi([f]) = n \iff [f] = [\omega_n]$, that is, the group isomorphism $\Phi$ maps homotopy classes of paths that loop $n$ times around $S^1$ to the integer $n$.
+     
+     To see this, notice that $\tilde{\omega}_n$ is a lift of $\omega_n$ beginning at $0$ and ending at $n$, so $\Phi([\omega_n]) = n$. Thus $\Phi([f]) = n \iff \Phi([f]) = \Phi([\omega_n]) \iff [f] = [\omega_n]$, since $\Phi$ is injective.
+\end{remark}
+
+\begin{corollary}[The Fundamental Theorem of Algebra]
+    Every nonconstant polynomial with coefficients in $\C$ has a root in $\C$.
+\end{corollary}
+
+\begin{proof}
+    Let $p : \C \to \C$ be a polynomial with no roots given by $p(z) = z^n + a_1 z^{n-1} + \dots + a_n$. For each $r \geq 0$ define the path 
+    \begin{align*}
+        f_r : I &\to S^1 \\
+        s &\mapsto \frac{p(r e^{2 \pi i s})/p(r)}{p(r e^{2 \pi i s})/p(r)}. 
+    \end{align*} Since $p$ has no roots, $f_r$ is a continuous loop around $S^1$ based at $1$. Then, $f_0 = \omega_0$ which is the constant loop based at $1$, so each $f_r$ is path homotopic to $\omega_0$. Now choose some $R \in \R$ so that $R > \max{1, |a_1| + \dots + |a_n|}$. When $|z| = R$, we have $|z^n| > |z^{n-1}|(|a_1| + \dots + |a_n|) \geq |a_1 z^{n-1} + \dots + a_n|$, by the triangle inequality and the fact that $R^p > R^q$ when $p > q$, since $R > 1$.
     
-    Now we have to show that $\Phi$ is bijective and to do that we use the fact that $p : \R \to S^1$ is a covering space. First, let $[f]$ be a homotopy of paths based around $(1, 0)$. By Corollary \ref{cor_lift_path}, there is a unique lift $\tilde{f} : I \to \R$ of $f$ such that $\tilde{f}(0) = 0$ (notice that $0 \in p^{-1}\set{(1, 0)}$). Since $f = p \circ \tilde{f}$, we have $(1, 0)=f(1) = p (\tilde{f}(1))$, so $\tilde{f}(1) \in p^{-1}\set{(1, 0)} = \Z$, so $\tilde{f}(1)$ is some integer $n \in \Z$. Thus, we must have $\tilde{f} \simeq \tilde{\omega}_n$, since $\tilde{f}$ is a path that begins at $0$ and ends in $n$. It follows that $f = p \circ \tilde{f} \simeq p \circ \tilde{\omega}_n = \omega_n$. Thus $[f] = [\omega_n] = \Phi(n)$, and $\Phi$ is surjective.
+    By the previous inequality, it follows that the function $p_t : \C \to S^1$ given by $p_t(z) = z^n + t(a_1 z^{n-1} + \dots + |a_n|)$ has no roots for $t \in [0, 1]$. Now define the map 
+    \begin{align*}
+        g_t : I &\to S^1 \\
+        s &\mapsto \frac{p_t(R e^{2 \pi i s})/p_t(R)}{p_t(R e^{2 \pi i s})/p_t(R)}. 
+    \end{align*} Notice that $p_0 = z \mapsto z^n$ and $p_1 = p$, which means $g_0 = s \mapsto e^{2 \pi i n s} = \omega_n$, and $g_1 = f_R$. But clearly $g_0 \simeq g_1$, and we know that $f_R \simeq f_0 \simeq \omega_0$, so $[\omega_n] = [\omega_0]$. But then $\Phi([\omega_n]) = n = \Phi([\omega_0]) = 0$. Hence $n = 0$, and our polynomial is constant.
+\end{proof}
+
+\begin{corollary}
+    Every continuous map $h : D^2 \to D^2$ has a fixed point, that is, some $x \in D^2$ with $h(x) = x$.
+\end{corollary}
+
+\begin{proof}
+    Let $h : D^2 \to D^2$ be continuous and assume for contradiction that it has no fixed points. Define the map $r : D^2 \to S^1$ in the following way. For each $x \in D^2$ consider the ray beginning at $x$ which passes through $h(x)$. Let $r(x)$ be the intersection of this ray with the circle. $r$ is a continuous map, and its restriction to $S^1$ is the identity.
     
-    To see that $\Phi$ is injective, assume that $\Phi(m) = \Phi(n)$. This means that there is a homotopy of paths $f_t : I \to S^1$ such that $f_0 = \omega_m = p \circ \tilde{\omega}_m$ and $f_1 = \omega_n = p \circ \tilde{\omega}_n$. By Corollary \ref{cor_lift_homotopy}, there is a unique homotopy of paths $\tilde{f}_t : I \to  \R$ where $\tilde{f}_0(0) = 0$ and $p \circ f_t = \tilde{f}_t$. Notice that $p \circ \tilde{\omega}_m = p \circ \tilde{f}_0$, and the uniqueness part of Corollary \ref{cor_lift_path} guarantees that $\tilde{f}_0 = \tilde{\omega}_m$. Similarly, we have $\tilde{f}_1 = \tilde{\omega}_n$. Then, $\tilde{f}_0(1) = \tilde{\omega}_m(1) = m = \tilde{f}_1(1) = \tilde{\omega}_n(1) = n$. Thus $m = n$, which means $\Phi$ is also injective.
+    Now consider the loop $\omega_1 : I \to S^1$. In $D^2$, there is a homotopy $f_t : I \to D^2$ from $\omega_1$ to a constant loop, given by $f_t(s) = (1-t) \omega_1(s)$. Then, $r \circ f_t$ is a homotopy in $S^1$ is a homotopy of paths from $\omega_1$ to a constant loop based at $0$. Thus $[\omega_1] = [\omega_0]$ and we have $\Phi([\omega_1]) = 1 = \Phi([\omega_0]) = 0$, a contradiction.
 \end{proof}
 
 \end{document}
