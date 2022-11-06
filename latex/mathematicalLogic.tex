@@ -95,19 +95,6 @@
 \begin{document}
 
 \maketitle
-Nesse exercício consideraremos apenas interpretações sobre uma linguagem que
-contêm apenas um símbolo de relação binária $p$ e nenhum símbolo de função. Também
-não especificaremos as funções de designação, já que $\phi_1, \phi_2$ e $\phi_3$ não possuem variáveis livres, logo seus significados semânticos não dependem das funções de designação.
-
-A interpretação $\struct{A}_r$ cujo domínio é $\N$ e $p^{\struct{A}_r} = \emptyset$ vacuosamente satisfaz $\phi_2$ e $\phi_3$.
-Contudo, $\struct{A}_r$ não satisfaz $\phi_1$, já que $(0, 0) \notin p^{\struct{A}_r}$, por exemplo.
-
-Defina agora a interpretação $\struct{A}_s$ cujo domínio é $\N$ e $p^{\struct{A}_s}$ é a relação $\leq$ usual nos naturais. A relação $\leq$ é reflexiva e transitiva, contudo não é simétrica, já que por exemplo $4 \leq 5$ mas $\neg (5 \leq 4)$. Ou seja, temos $(4, 5) \in p^{\struct{A}_s}$ mas $(5, 4) \notin p^{\struct{A}_s}$. Dessa forma, $\struct{A}_s$ satisfaz $\phi_1$ e $\phi_3$, mas não $\phi_2$.
-
-Por fim, considere a relação $\struct{A}_t$ cujo domínio é $\set{1, 2, 3}$ e $p^{\struct{A}_t}$ é 
-\begin{equation*}
-    \set{(1, 1), (2, 2), (3, 3), (0, 1), (1, 2), (1, 0), (2, 1)}.
-\end{equation*} Claramente $p^{\struct{A}_t}$ é reflexiva e simétrica. Contudo, $p^{\struct{A}_t}$ não é transitiva, já que $(0, 1) \in p^{\struct{A}_t}$, $(1, 2) \in p^{\struct{A}_t}$ mas $(0, 2) \notin p^{\struct{A}_t}$. Dessa forma, $\struct{A}_t$ satisfaz $\phi_1$ e $\phi_2$, mas não $\phi_3$.
 
 \section{Propositional Logic}
 \begin{definition}
